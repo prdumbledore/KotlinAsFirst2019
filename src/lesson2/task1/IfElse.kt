@@ -68,14 +68,9 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  */
 fun ageDescription(age: Int):
         String = when {
-    (age % 100 == 11) -> "$age лет"
-    (age % 100 == 12) -> "$age лет"
-    (age % 100 == 13) -> "$age лет"
-    (age % 100 == 14) -> "$age лет"
+    (age % 100 in 11..14) -> "$age лет"
     (age % 10 == 1) -> "$age год"
-    (age % 10 == 2) -> "$age года"
-    (age % 10 == 3) -> "$age года"
-    (age % 10 == 4) -> "$age года"
+    (age % 10 in 2..4) -> "$age года"
     else -> "$age лет"
 }
 /**
@@ -88,16 +83,15 @@ fun ageDescription(age: Int):
 fun timeForHalfWay(
     t1: Double, v1: Double,
     t2: Double, v2: Double,
-    t3: Double, v3: Double): Double =
-    if ((t1 * v1 + t2 * v2 + t3 * v3) / 2 > (t1 * v1 + t2 * v2)) {
-     t1 + t2 + ((t1 * v1 + t2 * v2 + t3 * v3) / 2 - (t1 * v1 + t2 * v2)) / v3
-    }
-    else if ((t1 * v1 + t2 * v2 + t3 * v3) / 2 > (t1 * v1)) {
-     t1 + ((t1 * v1 + t2 * v2 + t3 * v3) / 2 - (t1 * v1)) / v2
-    }
-        else {
-        (t1 * v1 + t2 * v2 + t3 * v3) / 2 / v1
-    }
+    t3: Double, v3: Double): Double {
+val s: Double = (v1 * t1 + t2 * v2 + t3 * v3) / 2
+if (s > (t1 * v1 + t2 * v2))
+    return t1 + t2 + (s - (t1 * v1 + t2 * v2)) / v3
+else if (s > (t1 * v1))
+    return t1 + ((s - (t1 * v1)) / v2)
+else
+    return (s / v1)
+}
 
 /**
  * Простая
@@ -112,15 +106,15 @@ fun whichRookThreatens(
     kingX: Int, kingY: Int,
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int): Int =
-    when {
-        ((kingX == rookX1) and (kingX == rookX2)) -> 3
-        ((kingX == rookX1) and (kingY == rookY2)) -> 3
-        ((kingY == rookY1) and (kingX == rookX2)) -> 3
-        ((kingY == rookY1) and (kingY == rookY2)) -> 3
-        (kingY == rookY2) or (kingX == rookX2) -> 2
-        (kingY == rookY1) or (kingX == rookX1) -> 1
+when {
+    (kingX == rookX1) && (kingX == rookX2) -> 3
+    (kingX == rookX1) && (kingY == rookY2) -> 3
+    (kingY == rookY1) && (kingX == rookX2) -> 3
+    (kingY == rookY1) && (kingY == rookY2) -> 3
+    (kingY == rookY2) || (kingX == rookX2) -> 2
+    (kingY == rookY1) || (kingX == rookX1) -> 1
     else -> 0
-    }
+}
 /**
  * Простая
  *
@@ -136,12 +130,12 @@ fun rookOrBishopThreatens(
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
 ): Int =
-    when {
-        ((kingX == rookX) or (kingY == rookY)) and (abs(kingX - bishopX) == abs(kingY - bishopY)) -> 3
-        abs(kingX - bishopX) == abs(kingY - bishopY) -> 2
-        (kingX == rookX) or (kingY == rookY) -> 1
-        else -> 0
-    }
+when {
+    ((kingX == rookX) || (kingY == rookY)) && (abs(kingX - bishopX) == abs(kingY - bishopY)) -> 3
+    abs(kingX - bishopX) == abs(kingY - bishopY) -> 2
+    (kingX == rookX) || (kingY == rookY) -> 1
+    else -> 0
+}
 
 /**
  * Простая
@@ -153,9 +147,12 @@ fun rookOrBishopThreatens(
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int =
     when {
-        (a + b > c) and (c + b > a) and (a + c > b) and ((sqr(a) == sqr(b) + sqr(c)) or (sqr(b) == sqr(a) + sqr(c)) or (sqr(c) == sqr(b) + sqr(a))) -> 1
-        (a + b > c) and (c + b > a) and (a + c > b) and ((sqr(a) > sqr(b) + sqr(c)) or (sqr(b) > sqr(a) + sqr(c)) or (sqr(c) > sqr(b) + sqr(a))) -> 2
-        (a + b > c) and (c + b > a) and (a + c > b) and ((sqr(a) < sqr(b) + sqr(c)) or (sqr(b) < sqr(a) + sqr(c)) or (sqr(c) < sqr(b) + sqr(a))) -> 0
+        (a + b > c) && (c + b > a) && (a + c > b) &&
+        ((sqr(a) == sqr(b) + sqr(c)) || (sqr(b) == sqr(a) + sqr(c)) || (sqr(c) == sqr(b) + sqr(a))) -> 1
+        (a + b > c) && (c + b > a) && (a + c > b) &&
+        ((sqr(a) > sqr(b) + sqr(c)) || (sqr(b) > sqr(a) + sqr(c)) || (sqr(c) > sqr(b) + sqr(a))) -> 2
+        (a + b > c) && (c + b > a) && (a + c > b) &&
+        ((sqr(a) < sqr(b) + sqr(c)) || (sqr(b) < sqr(a) + sqr(c)) || (sqr(c) < sqr(b) + sqr(a))) -> 0
         else -> -1
 
     }
@@ -169,16 +166,16 @@ fun triangleKind(a: Double, b: Double, c: Double): Int =
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int =
-if ((a <= c) and (c <= b) and (b <= d)) {
-    b-c
-}
-    else if  ((a <= c) and (d <= b)) {
-    d-c
-}
-    else if ((c <= a) and (b <= d)) {
-    b-a
-}
-    else if ((c <= a) and (a <= d) and (d <= b)) {
-    d-a
-}
-else -1
+    if ((a <= c) && (c <= b) && (b <= d)) {
+    b - c
+    }
+    else if ((a <= c) && (d <= b)) {
+    d - c
+    }
+    else if ((c <= a) && (b <= d)) {
+    b - a
+    }
+    else if ((c <= a) && (a <= d) && (d <= b)) {
+    d - a
+    }
+    else -1
