@@ -68,10 +68,10 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  */
 fun ageDescription(age: Int):
         String = when {
-    (age % 100 in 11..14) -> "$age лет"
-    (age % 10 == 1) -> "$age год"
-    (age % 10 in 2..4) -> "$age года"
-    else -> "$age лет"
+        (age % 100 in 11..14) -> "$age лет"
+        (age % 10 == 1) -> "$age год"
+        (age % 10 in 2..4) -> "$age года"
+        else -> "$age лет"
 }
 /**
  * Простая
@@ -84,13 +84,12 @@ fun timeForHalfWay(
     t1: Double, v1: Double,
     t2: Double, v2: Double,
     t3: Double, v3: Double): Double {
-val s: Double = (v1 * t1 + t2 * v2 + t3 * v3) / 2
-if (s > (t1 * v1 + t2 * v2))
-    return t1 + t2 + (s - (t1 * v1 + t2 * v2)) / v3
-else if (s > (t1 * v1))
-    return t1 + ((s - (t1 * v1)) / v2)
-else
-    return (s / v1)
+    val s = (v1 * t1 + t2 * v2 + t3 * v3) / 2
+    return when {
+        (s > (t1 * v1 + t2 * v2)) -> t1 + t2 + (s - (t1 * v1 + t2 * v2)) / v3
+        (s > (t1 * v1)) -> t1 + ((s - (t1 * v1)) / v2)
+        else -> s / v1
+    }
 }
 
 /**
@@ -106,14 +105,14 @@ fun whichRookThreatens(
     kingX: Int, kingY: Int,
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int): Int =
-when {
-    (kingX == rookX1) && (kingX == rookX2) -> 3
-    (kingX == rookX1) && (kingY == rookY2) -> 3
-    (kingY == rookY1) && (kingX == rookX2) -> 3
-    (kingY == rookY1) && (kingY == rookY2) -> 3
-    (kingY == rookY2) || (kingX == rookX2) -> 2
-    (kingY == rookY1) || (kingX == rookX1) -> 1
-    else -> 0
+    when {
+        (kingX == rookX1) && (kingX == rookX2) -> 3
+        (kingX == rookX1) && (kingY == rookY2) -> 3
+        (kingY == rookY1) && (kingX == rookX2) -> 3
+        (kingY == rookY1) && (kingY == rookY2) -> 3
+        (kingY == rookY2) || (kingX == rookX2) -> 2
+        (kingY == rookY1) || (kingX == rookX1) -> 1
+        else -> 0
 }
 /**
  * Простая
@@ -130,11 +129,11 @@ fun rookOrBishopThreatens(
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
 ): Int =
-when {
-    ((kingX == rookX) || (kingY == rookY)) && (abs(kingX - bishopX) == abs(kingY - bishopY)) -> 3
-    abs(kingX - bishopX) == abs(kingY - bishopY) -> 2
-    (kingX == rookX) || (kingY == rookY) -> 1
-    else -> 0
+    when {
+        ((kingX == rookX) || (kingY == rookY)) && (abs(kingX - bishopX) == abs(kingY - bishopY)) -> 3
+        abs(kingX - bishopX) == abs(kingY - bishopY) -> 2
+        (kingX == rookX) || (kingY == rookY) -> 1
+        else -> 0
 }
 
 /**
@@ -167,15 +166,11 @@ fun triangleKind(a: Double, b: Double, c: Double): Int =
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int =
     if ((a <= c) && (c <= b) && (b <= d)) {
-    b - c
-    }
+        b - c }
     else if ((a <= c) && (d <= b)) {
-    d - c
-    }
+        d - c }
     else if ((c <= a) && (b <= d)) {
-    b - a
-    }
+        b - a }
     else if ((c <= a) && (a <= d) && (d <= b)) {
-    d - a
-    }
+        d - a }
     else -1
