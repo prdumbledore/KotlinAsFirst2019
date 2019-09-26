@@ -165,11 +165,11 @@ fun triangleKind(a: Double, b: Double, c: Double): Int =
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int =
     if ((a <= c) && (c <= b) && (b <= d)) {
-        b - c }
-    else if ((a <= c) && (d <= b)) {
-        d - c }
-    else if ((c <= a) && (b <= d)) {
-        b - a }
-    else if ((c <= a) && (a <= d) && (d <= b)) {
-        d - a }
-    else -1
+        b - c
+    } else if ((a <= c) && (d <= b)) {
+        d - c
+    } else if ((c <= a) && (b <= d)) {
+        b - a
+    } else if ((c <= a) && (a <= d) && (d <= b)) {
+        d - a
+    } else -1
