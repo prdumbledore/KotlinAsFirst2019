@@ -3,10 +3,7 @@
 package lesson3.task1
 
 import lesson1.task1.sqr
-import kotlin.math.PI
-import kotlin.math.abs
-import kotlin.math.pow
-import kotlin.math.sqrt
+import kotlin.math.*
 
 /**
  * Пример
@@ -73,7 +70,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  */
 fun digitNumber(n: Int): Int {
     var result = 1
-    var number = n
+    var number = abs(n)
     while (number / 10 > 0) {
         result += 1
         number /= 10
@@ -151,15 +148,7 @@ fun maxDivisor(n: Int): Int = n / minDivisor(n)
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    if ((m == 2) && (n == 2)) return true
-    if ((m % 2 == 0) && (n % 2 == 0)) return false
-    if ((n % m == 0) || (m % n == 0))
-    for (i in 3..n step 2) {
-        if ((m % i == 0) && (n % i == 0)) return false
-    }
-    return true
-}
+fun isCoPrime(m: Int, n: Int): Boolean = lcm(m, n) == m * n
 
 /**
  * Простая
@@ -280,7 +269,7 @@ fun cos(x: Double, eps: Double): Double {
 fun revert(n: Int): Int {
     var a = n
     var res = 0
-    while (a > 0) {
+    while (a != 0) {
         res *= 10
         res += (a % 10)
         a /= 10
@@ -346,10 +335,9 @@ fun squareSequenceDigit(n: Int): Int {
         res = num % 10
     }
     if (a < 0) {
-        a += digit
-        num = revert(num)
+        a -=1
         while (a != 0) {
-            a -= 1
+            a += 1
             res = num % 10
             num /= 10
         }
@@ -382,10 +370,9 @@ fun fibSequenceDigit(n: Int): Int {
         res = num % 10
     }
     if (a < 0) {
-        a += digit
-        num = revert(num)
+        a -=1
         while (a != 0) {
-            a -= 1
+            a += 1
             res = num % 10
             num /= 10
         }
