@@ -123,15 +123,15 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var a = n
     for (i in 2..(sqrt(n.toDouble()).toInt())) {
         if (n % i == 0) {
-            a = i
+            return i
             break
         }
     }
-    return a
+    return n
 }
+
 
 /**
  * Простая
@@ -183,14 +183,12 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
 fun collatzSteps(x: Int): Int {
     var step = 0
     var a = x
-    if (a <= 1) 0
     while (a != 1) {
+        step += 1
         if (a % 2 == 0) {
-            step += 1
             a /= 2
         }
         else {
-            step += 1
             a = a * 3 + 1
         }
     }
@@ -208,7 +206,7 @@ fun collatzSteps(x: Int): Int {
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 fun sin(x: Double, eps: Double): Double {
-    var a = x % (2.0 * PI)
+    var a = x - 2 * PI * truncate(x / (2 * PI))
     var sin = 0.0
     var i = 1
     var counter = 1
@@ -219,7 +217,7 @@ fun sin(x: Double, eps: Double): Double {
             counter++
         }
         else {
-            a = - (x.pow(i) / factorial(i))
+            a = -(x.pow(i) / factorial(i))
             i += 2
             counter++
         }
@@ -239,7 +237,7 @@ fun sin(x: Double, eps: Double): Double {
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
 fun cos(x: Double, eps: Double): Double {
-    var a = x % (2.0 * PI)
+    var a = x - 2 * PI * truncate(x / (2 * PI))
     var cos = 1.0
     var i = 2
     var counter = 2
@@ -305,8 +303,7 @@ fun hasDifferentDigits(n: Int): Boolean {
         x1 = a % 10
         x2 = (a / 10) % 10
         a /= 10
-        if (x1 == x2) continue
-        else return true
+        if (x1 != x2) return true
     }
     return false
 }

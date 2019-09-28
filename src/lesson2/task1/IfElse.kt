@@ -90,7 +90,7 @@ fun timeForHalfWay(
         (s > (t1 * v1)) -> t1 + ((s - (t1 * v1)) / v2)
         else -> s / v1
     }
-    }
+}
 
 /**
  * Простая
