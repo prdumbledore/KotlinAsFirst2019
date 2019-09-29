@@ -206,22 +206,23 @@ fun collatzSteps(x: Int): Int {
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 fun sin(x: Double, eps: Double): Double {
-    var a = x - 2 * PI * truncate(x / (2 * PI))
+    val a = x % (2 * PI)
+    var x1 = x
     var sin = 0.0
     var i = 1
     var counter = 1
-    while (abs(a) >= eps) {
+    while (abs(x1) >= eps) {
         if (counter % 2 != 0) {
-            a = x.pow(i) / factorial(i)
+            x1 = a.pow(i) / factorial(i)
             i += 2
             counter++
         }
         else {
-            a = -(x.pow(i) / factorial(i))
+            x1 = -(a.pow(i) / factorial(i))
             i += 2
             counter++
         }
-        sin += a
+        sin += x1
     }
     return sin
 }
@@ -237,22 +238,23 @@ fun sin(x: Double, eps: Double): Double {
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
 fun cos(x: Double, eps: Double): Double {
-    var a = x - 2 * PI * truncate(x / (2 * PI))
+    var a = x % (2 * PI)
     var cos = 1.0
     var i = 2
     var counter = 2
-    while (abs(a) >= eps) {
+    var x1 = x
+    while (abs(x1) >= eps) {
         if (counter % 2 == 0) {
-            a = - (x.pow(i) / factorial(i))
+            x1 = - (a.pow(i) / factorial(i))
             i += 2
             counter++
         }
         else {
-            a = x.pow(i) / factorial(i)
+            x1 = a.pow(i) / factorial(i)
             i += 2
             counter++
         }
-        cos += a
+        cos += x1
     }
     return cos
 }
