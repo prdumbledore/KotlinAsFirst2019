@@ -126,7 +126,6 @@ fun minDivisor(n: Int): Int {
     for (i in 2..(sqrt(n.toDouble()).toInt())) {
         if (n % i == 0) {
             return i
-            break
         }
     }
     return n
@@ -158,11 +157,8 @@ fun isCoPrime(m: Int, n: Int): Boolean = lcm(m, n) == m * n
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    for (i in m..n) {
-        if ((sqrt(i.toDouble()) % 1.0 == 0.0))
-            return true
-    }
-    return false
+    val num = floor(sqrt(n.toDouble())).toInt()
+    return num * num in m..n
 }
 /**
  * Средняя
@@ -214,14 +210,12 @@ fun sin(x: Double, eps: Double): Double {
     while (abs(x1) >= eps) {
         if (counter % 2 != 0) {
             x1 = a.pow(i) / factorial(i)
-            i += 2
-            counter++
         }
         else {
             x1 = -(a.pow(i) / factorial(i))
-            i += 2
-            counter++
         }
+        i += 2
+        counter++
         sin += x1
     }
     return sin
@@ -238,7 +232,7 @@ fun sin(x: Double, eps: Double): Double {
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
 fun cos(x: Double, eps: Double): Double {
-    var a = x % (2 * PI)
+    val a = x % (2 * PI)
     var cos = 1.0
     var i = 2
     var counter = 2
@@ -246,14 +240,12 @@ fun cos(x: Double, eps: Double): Double {
     while (abs(x1) >= eps) {
         if (counter % 2 == 0) {
             x1 = - (a.pow(i) / factorial(i))
-            i += 2
-            counter++
         }
         else {
             x1 = a.pow(i) / factorial(i)
-            i += 2
-            counter++
         }
+        i += 2
+        counter++
         cos += x1
     }
     return cos
