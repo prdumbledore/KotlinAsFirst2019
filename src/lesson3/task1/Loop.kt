@@ -326,7 +326,7 @@ fun squareSequenceDigit(n: Int): Int {
         res = num % 10
     }
     if (a < 0) {
-        a -=1
+        a -= 1
         while (a != 0) {
             a += 1
             res = num % 10
