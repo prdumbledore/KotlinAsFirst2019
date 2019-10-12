@@ -430,11 +430,12 @@ fun russian(n: Int): String {
                 a = num % 100
                 num /= 100
                 when {
-                    a in 10..20 -> list.add("тысяч")
+                    a in 10..20  -> list.add("тысяч")
                     a % 10 == 1 -> list.add("тысяча")
                     (a % 10) in 2..4 -> list.add("тысячи")
                     (a % 10) in 5..9 -> list.add("тысяч")
                     (counter == 6) && (a == 0) -> list.add("тысяч")
+                    else -> list.add("тысяч")
                 }
                 if (a in 10..19) list += russianWords(a % 10, list3)
                 else if (a in 1..9) list += russianWords(a, list2)
