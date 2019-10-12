@@ -247,6 +247,7 @@ fun convert(n: Int, base: Int): List<Int> {
     val result = mutableListOf<Int>()
     var mod = 0
     var a = n
+    if (a == 0) result.add(0)
     while (a > 0) {
         mod = a % base
         result.add(mod)
@@ -449,7 +450,8 @@ fun russian(n: Int): String {
                 }
             }
             if (a in 1..91 step 10) {
-                list.add(russianWords(a / 10, list3))
+                if (count != 1) list.add(russianWords(a / 10, list3))
+                else list.add(russianWords(a, list1))
                 if (count in 4..5) list.add("тысяч")
             }
             if (count == 1 || count == 4) count -= 1
