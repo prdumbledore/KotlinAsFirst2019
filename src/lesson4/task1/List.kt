@@ -319,54 +319,32 @@ fun decimalFromString(str: String, base: Int): Int {
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
 fun roman(n: Int): String {
+    fun romanes(n: Int, list1: List<String>): String {
+        val list = mutableListOf<String>()
+        for (i in 0 until list1.size) {
+            if (i == n) {
+                list.add(list1[i])
+                break
+            }
+        }
+        return list.joinToString(separator = "")
+    }
     val list = mutableListOf<String>()
     var num = n
-    var a = 0
-    a = num % 10
-    num /= 10
-    when (a) {
-        1 -> list.add("I")
-        2 -> list.add("II")
-        3 -> list.add("III")
-        4 -> list.add("IV")
-        5 -> list.add("V")
-        6 -> list.add("VI")
-        7 -> list.add("VII")
-        8 -> list.add("VIII")
-        9 -> list.add("IX")
-    }
-    a = num % 10
-    num /= 10
-    when (a) {
-        1 -> list.add("X")
-        2 -> list.add("XX")
-        3 -> list.add("XXX")
-        4 -> list.add("XL")
-        5 -> list.add("L")
-        6 -> list.add("LX")
-        7 -> list.add("LXX")
-        8 -> list.add("LXXX")
-        9 -> list.add("XC")
-    }
-    a = num % 10
-    num /= 10
-    when (a) {
-        1 -> list.add("C")
-        2 -> list.add("CC")
-        3 -> list.add("CCC")
-        4 -> list.add("CD")
-        5 -> list.add("D")
-        6 -> list.add("DC")
-        7 -> list.add("DCC")
-        8 -> list.add("DCCC")
-        9 -> list.add("CM")
-    }
-    a = num % 10
-    num /= 10
-    when (a) {
-        1 -> list.add("M")
-        2 -> list.add("MM")
-        3 -> list.add("MMM")
+    var a = 1
+    var counter = 0
+    val list1 = listOf<String>("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX")
+    val list2 = listOf<String>("", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC")
+    val list3 = listOf<String>("", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM")
+    val list4 = listOf<String>("", "M", "MM", "MMM")
+    while (num > 0) {
+        a = num % 10
+        num /= 10
+        counter++
+        if (counter == 1) list.add(romanes(a, list1))
+        if (counter == 2) list.add(romanes(a, list2))
+        if (counter == 3) list.add(romanes(a, list3))
+        if (counter == 4) list.add(romanes(a, list4))
     }
     return list.reversed().joinToString(separator = "")
 }
@@ -375,114 +353,108 @@ fun roman(n: Int): String {
  * Очень сложная
  *
  * Записать заданное натуральное число 1..999999 прописью по-русски.
- * Например, 375 = "триста семьдесят пять",
+ * Например, `375 = "триста семьдесят пять",`
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 fun russian(n: Int): String {
-    fun russianp(a: Int, list: MutableList<String>): String {
-        val ab = a
-        if ((ab !in 1..91 step 10) && (ab !in 0..20 step 10) && (ab !in 1..9)) {
-            when (ab % 10) {
-                2 -> list.add("двадцать")
-                3 -> list.add("тридцать")
-                4 -> list.add("сорок")
-                5 -> list.add("пятьдесят")
-                6 -> list.add("шестьдесят")
-                7 -> list.add("семьдесят")
-                8 -> list.add("восемьдесят")
-                9 -> list.add("девяносто")
-            }
-            when (ab / 10) {
-                1 -> list.add("одна")
-                2 -> list.add("две")
-                3 -> list.add("три")
-                4 -> list.add("четыре")
-                5 -> list.add("пять")
-                6 -> list.add("шесть")
-                7 -> list.add("семь")
-                8 -> list.add("восемь")
-                9 -> list.add("девять")
-            }
-        } else {
-            when (ab) {
-                10 -> list.add("один")
-                2 -> list.add("две")
-                3 -> list.add("три")
-                4 -> list.add("четыре")
-                5 -> list.add("пять")
-                6 -> list.add("шесть")
-                7 -> list.add("семь")
-                8 -> list.add("восемь")
-                9 -> list.add("девять")
-                20 -> list.add("два")
-                1 -> list.add("десять")
-                11 -> list.add("одиннадцать")
-                21 -> list.add("двенадцать")
-                31 -> list.add("тринадцать")
-                41 -> list.add("четырнадцать")
-                51 -> list.add("пятнадцать")
-                61 -> list.add("шестнадцать")
-                71 -> list.add("семнадцать")
-                81 -> list.add("восемнадцать")
-                91 -> list.add("девятнадцать")
+    fun russianWords(n: Int, list1: List<String>): String {
+        val list = mutableListOf<String>()
+        for (i in 0 until list1.size) {
+            if (i == n) {
+                list.add(list1[i])
+                break
             }
         }
-        return list.joinToString(separator = " ")
+        return list.joinToString(separator = "")
     }
-
     val list = mutableListOf<String>()
+    val list1 = listOf<String>("", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+    val list2 = listOf<String>("", "одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+    val list3 = listOf<String>(
+        "десять",
+        "одиннадцать",
+        "двенадцать",
+        "тринадцать",
+        "четырнадцать",
+        "пятнадцать",
+        "шестнадцать",
+        "семнадцать",
+        "восемнадцать",
+        "девятнадцать"
+    )
+    val list4 = listOf<String>(
+        "",
+        "",
+        "двадцать",
+        "тридцать",
+        "сорок",
+        "пятьдесят",
+        "шестьдесят",
+        "семьдесят",
+        "восемьдесят",
+        "девяносто"
+    )
+    val list5 = listOf<String>(
+        "",
+        "сто",
+        "двести",
+        "триста",
+        "четыреста",
+        "пятьсот",
+        "шестьсот",
+        "семьсот",
+        "восемьсот",
+        "девятьсот"
+    )
     var num = revert(n)
-    var a = 0
-    val count = digitNumber(n)
-    if (count == 6) {
-        a = num % 10
-        num /= 10
-        when (a) {
-            1 -> list.add("сто")
-            2 -> list.add("двести")
-            3 -> list.add("триста")
-            4 -> list.add("четыреста")
-            5 -> list.add("пятьсот")
-            6 -> list.add("шестьсот")
-            7 -> list.add("семьсот")
-            8 -> list.add("восемьсот")
-            9 -> list.add("девятьсот")
+    var a = 1
+    var count = digitNumber(n)
+    while (count != 0) {
+        if ((count == 6) || (count == 3)) {
+            a = num % 10
+            num /= 10
+            if (a != 0) list.add(russianWords(a, list5))
+            count -= 1
         }
-    }
-    if (count > 3) {
-        a = num % 100
-        num /= 100
-        russianp(a, list)
-        when (a / 10) {
-            1 -> list.add("тысяча")
-            in 2..4 -> list.add("тысячи")
-            in 5..9 -> list.add("тысяч")
-        }
-        if (a / 10 == 0) {
-            when (a % 10) {
-                0 -> list.add("тысяч")
-                in 1..9 -> list.add("тысячи")
+        if ((count in 4..5) || (count in 1..2)) {
+            if (count !in 1..4 step 3) {
+                a = num % 100
+                num /= 100
+            } else {
+                a = num % 10
+                num /= 10
             }
+            if (a !in 1..91 step 10) {
+                if (a in 1..9) {
+                    if (count == 4) list.add(russianWords(a, list2))
+                    if (count == 1) list.add(russianWords(a, list1))
+                }
+                if ((a % 10 != 0) && (a !in 1..9)) list.add(russianWords(a % 10, list4))
+                if (a / 10 != 0) {
+                    if (count == 5) list.add(russianWords(a / 10, list2))
+                    if (count == 2) list.add(russianWords(a / 10, list1))
+                }
+                if (count in 4..5) {
+                    when (a / 10) {
+                        1 -> list.add("тысяча")
+                        in 2..4 -> list.add("тысячи")
+                        in 5..9 -> list.add("тысяч")
+                    }
+                    if (a / 10 == 0) {
+                        when (a % 10) {
+                            0 -> list.add("тысяч")
+                            in 1..9 -> list.add("тысячи")
+                        }
+                    }
+                }
+            }
+            if (a in 1..91 step 10) {
+                list.add(russianWords(a / 10, list3))
+                if (count in 4..5) list.add("тысяч")
+            }
+            if (count == 1 || count == 4) count -= 1
+            else count -= 2
         }
     }
-    if (count > 2) {
-        a = num % 10
-        num /= 10
-        when (a) {
-            1 -> list.add("сто")
-            2 -> list.add("двести")
-            3 -> list.add("триста")
-            4 -> list.add("четыреста")
-            5 -> list.add("пятьсот")
-            6 -> list.add("шестьсот")
-            7 -> list.add("семьсот")
-            8 -> list.add("восемьсот")
-            9 -> list.add("девятьсот")
-        }
-    }
-    if (count > 1) {
-        a = num
-        russianp(a, list)
-    }
-return list.joinToString(separator = " ")
+    return list.joinToString(separator = " ")
 }
