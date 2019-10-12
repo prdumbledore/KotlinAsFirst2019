@@ -358,7 +358,7 @@ fun roman(n: Int): String {
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 fun russian(n: Int): String {
-    fun russianWords(n: Int, list1: List<String>): String {
+    fun russianWords(n: Int, list1: List<String>): List<String> {
         val list = mutableListOf<String>()
         for (i in 0 until list1.size) {
             if (i == n) {
@@ -366,7 +366,7 @@ fun russian(n: Int): String {
                 break
             }
         }
-        return list.joinToString(separator = "")
+        return list
     }
     val list = mutableListOf<String>()
     val list1 = listOf<String>("", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
@@ -407,56 +407,44 @@ fun russian(n: Int): String {
         "восемьсот",
         "девятьсот"
     )
-    var num = revert(n)
+    var num = n
     var a = 1
-    var count = digitNumber(n)
-    while (count != 0) {
-        if ((count == 6) || (count == 3)) {
-            a = num % 10
-            num /= 10
-            if (a != 0) list.add(russianWords(a, list5))
-            count -= 1
-        }
-        if ((count in 4..5) || (count in 1..2)) {
-            if (count !in 1..4 step 3) {
+    val counter = digitNumber(n)
+    var count = 1
+    while (counter >= count) {
+        if (counter == 1) list += russianWords(num, list1)
+        if (counter >= 2) {
+            if (count == 2) {
                 a = num % 100
                 num /= 100
-            } else {
+                if (a in 10..19) list += russianWords(a % 10, list3)
+                else if (a in 1..9) list += russianWords(a, list1)
+                else list += (russianWords(a % 10, list1) + russianWords(a / 10, list4))
+            }
+            if ((count == 3) || (count == 6)) {
                 a = num % 10
                 num /= 10
+                if (a != 0) list += russianWords(a, list5)
             }
-            if (a !in 1..91 step 10) {
-                if (a in 1..9) {
-                    if (count == 4) list.add(russianWords(a, list2))
-                    if (count == 1) list.add(russianWords(a, list1))
+            if (count == 4) {
+                a = num % 100
+                num /= 100
+                when {
+                    a in 10..20 -> list.add("тысяч")
+                    a % 10 == 1 -> list.add("тысяча")
+                    (a % 10) in 2..4 -> list.add("тысячи")
+                    (a % 10) in 5..9 -> list.add("тысяч")
+                    (counter == 6) && (a == 0) -> list.add("тысяч")
                 }
-                if ((a % 10 != 0) && (a !in 1..9)) list.add(russianWords(a % 10, list4))
-                if (a / 10 != 0) {
-                    if (count == 5) list.add(russianWords(a / 10, list2))
-                    if (count == 2) list.add(russianWords(a / 10, list1))
-                }
-                if (count in 4..5) {
-                    when (a / 10) {
-                        1 -> list.add("тысяча")
-                        in 2..4 -> list.add("тысячи")
-                        in 5..9 -> list.add("тысяч")
-                    }
-                    if (a / 10 == 0) {
-                        when (a % 10) {
-                            0 -> list.add("тысяч")
-                            in 1..9 -> list.add("тысячи")
-                        }
-                    }
-                }
+                if (a in 10..19) list += russianWords(a % 10, list3)
+                else if (a in 1..9) list += russianWords(a, list2)
+                else list += (russianWords(a % 10, list2) + russianWords(a / 10, list4))
             }
-            if (a in 1..91 step 10) {
-                if (count != 1) list.add(russianWords(a / 10, list3))
-                else list.add(russianWords(a, list1))
-                if (count in 4..5) list.add("тысяч")
-            }
-            if (count == 1 || count == 4) count -= 1
-            else count -= 2
         }
+        count++
     }
-    return list.joinToString(separator = " ")
+    for (i in 0 until list.size) {
+        list.remove("")
+    }
+    return list.reversed().joinToString(separator = " ")
 }
