@@ -400,6 +400,7 @@ fun russian(n: Int): String {
                 a = num % 100
                 num /= 100
                 when {
+                    a in 10..20 -> list.add("тысяч")
                     a % 10 == 1 -> list.add("тысяча")
                     (a % 10) in 2..4 -> list.add("тысячи")
                     (a % 10) in 5..9 -> list.add("тысяч")
