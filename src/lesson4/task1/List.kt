@@ -196,7 +196,7 @@ fun polynom(p: List<Int>, x: Int): Int {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Int>): MutableList<Int> {
-    var sum = 0
+    var sum :Int
     for (i in 0 until list.size - 1) {
         sum = list[i] + list[i + 1]
         list[i + 1] = sum
@@ -244,7 +244,7 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
  */
 fun convert(n: Int, base: Int): List<Int> {
     val result = mutableListOf<Int>()
-    var mod = 0
+    var mod :Int
     var a = n
     do {
         mod = a % base
@@ -376,7 +376,7 @@ fun russian(n: Int): String {
         "девятьсот"
     )
     var num = n
-    var a = 1
+    var a :Int
     val counter = digitNumber(n)
     var count = 1
     while (counter >= count) {
