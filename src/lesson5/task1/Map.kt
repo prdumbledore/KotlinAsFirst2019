@@ -111,9 +111,9 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
  */
 fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
     for ((key) in a) {
-        if (a[key] == b[key]) return true
+        if (a[key] != b[key]) return false
     }
-    return false
+    return true
 }
 
 /**
@@ -330,7 +330,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
             handshake[i] = handshake.getOrDefault(i, setOf())
             if ((value.isNotEmpty())) {
                 for (k in handshake[i]!!) {
-                    if (k != key) set += k
+                    if ((k != key) && (k.isNotEmpty())) set += k
                 }
                 handshake[key] = value + set
                 set.removeAll(set)
