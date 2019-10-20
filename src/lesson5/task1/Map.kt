@@ -239,7 +239,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     for (i in word) {
-        if (i !in chars) return false
+        if ((i !in chars) && (i.toUpperCase() !in chars) && (i.toLowerCase() !in chars)) return false
     }
     return true
 }
@@ -330,7 +330,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
             handshake[i] = handshake.getOrDefault(i, setOf())
             if ((value.isNotEmpty())) {
                 for (k in handshake[i]!!) {
-                    if ((k != key) && (k.isNotEmpty())) set += k
+                    if ((k != key) && (handshake[i]!!.isNotEmpty())) set += k
                 }
                 handshake[key] = value + set
                 set.removeAll(set)
