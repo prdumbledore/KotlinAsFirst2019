@@ -109,7 +109,7 @@ class Tests {
         assertEquals(
             mapOf(5 to listOf("Михаил", "Семён"), 3 to listOf("Марат")),
             buildGrades(mapOf("Марат" to 3, "Семён" to 5, "Михаил" to 5))
-                .mapValues { (_, v) -> v.sorted() }
+            .mapValues { (_, v) -> v.sorted() }
         )
         assertEquals(
             mapOf(3 to listOf("Марат", "Михаил", "Семён")),
@@ -161,6 +161,20 @@ class Tests {
     @Tag("Normal")
     fun mergePhoneBooks() {
         assertEquals(
+            mapOf("Emergency" to "112", "Police" to "02"),
+            mergePhoneBooks(
+                mapOf("Emergency" to "112"),
+                mapOf("Emergency" to "112", "Police" to "02")
+            )
+        )
+        assertEquals(
+            mapOf("Emergency" to "112, 911", "Fire department" to "01", "Police" to "02"),
+            mergePhoneBooks(
+                mapOf("Emergency" to "112", "Fire department" to "01"),
+                mapOf("Emergency" to "911", "Police" to "02")
+            )
+        )
+        assertEquals(
             mapOf("Emergency" to "112"),
             mergePhoneBooks(
                 mapOf("Emergency" to "112"),
@@ -172,20 +186,6 @@ class Tests {
             mergePhoneBooks(
                 mapOf("Emergency" to "112"),
                 mapOf("Emergency" to "112", "Police" to "02")
-            )
-        )
-        assertEquals(
-            mapOf("Emergency" to "112, 911", "Police" to "02"),
-            mergePhoneBooks(
-                mapOf("Emergency" to "112"),
-                mapOf("Emergency" to "911", "Police" to "02")
-            )
-        )
-        assertEquals(
-            mapOf("Emergency" to "112, 911", "Fire department" to "01", "Police" to "02"),
-            mergePhoneBooks(
-                mapOf("Emergency" to "112", "Fire department" to "01"),
-                mapOf("Emergency" to "911", "Police" to "02")
             )
         )
     }
@@ -260,6 +260,7 @@ class Tests {
         assertFalse(hasAnagrams(emptyList()))
         assertTrue(hasAnagrams(listOf("рот", "свет", "тор")))
         assertFalse(hasAnagrams(listOf("рот", "свет", "код", "дверь")))
+        assertFalse(hasAnagrams(listOf("торт", "рот", "снюс")))
     }
 
     @Test
@@ -268,13 +269,13 @@ class Tests {
         assertEquals(
             mapOf(
                 "Marat" to setOf("Mikhail", "Sveta"),
-                "Sveta" to setOf("Mikhail"),
+                "Sveta" to setOf("Mikhail", "Marat"),
                 "Mikhail" to setOf()
             ),
             propagateHandshakes(
                 mapOf(
                     "Marat" to setOf("Sveta"),
-                    "Sveta" to setOf("Mikhail")
+                    "Sveta" to setOf("Mikhail", "Marat")
                 )
             )
         )
@@ -293,6 +294,7 @@ class Tests {
             )
         )
     }
+
 
     @Test
     @Tag("Hard")
