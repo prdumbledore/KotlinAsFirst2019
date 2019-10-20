@@ -221,7 +221,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
     var min = Double.MAX_VALUE
     productName = null
     for ((name, pair) in stuff) {
-        if ((pair.first == kind) && (pair.second <= min) && (kind.isNotEmpty())) {
+        if ((pair.first == kind) && (pair.second <= min)) {
             min = pair.second
             productName = name
         }
@@ -329,14 +329,14 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     for ((key, value) in handshake) {
         for (i in value) {
             handshake[i] = handshake.getOrDefault(i, setOf())
-        }
-        for ((key1, value1) in handshake) {
-            for (k in value1) {
-                if ((k != key) && (key != key1) && (value1.isNotEmpty())) set1 += k
+            for ((key1, value1) in handshake) {
+                for (k in value1) {
+                    if ((i == key1) && (k != key) && (key != key1)) set1 += k
+                }
             }
+            handshake[key] = value + set1
+            set1.removeAll(set1)
         }
-        handshake[key] = value + set1
-        set1.removeAll(set1)
     }
     return handshake
 }
