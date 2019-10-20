@@ -220,7 +220,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
     var productName: String? = null
     var min = Double.MAX_VALUE
     for ((name, pair) in stuff) {
-        if ((pair.first == kind) && (pair.second < min)) {
+        if ((pair.first == kind) && (pair.second < min) && (name.isNotEmpty())) {
             min = pair.second
             productName = name
         }
@@ -324,17 +324,15 @@ fun hasAnagrams(words: List<String>): Boolean {
  */
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
     val handshake = friends.toMutableMap()
-    val set = mutableSetOf<String>()
+    val set1 = mutableSetOf<String>()
     for ((key, value) in handshake) {
         for (i in value) {
             handshake[i] = handshake.getOrDefault(i, setOf())
-            if ((value.isNotEmpty())) {
-                for (k in handshake[i]!!) {
-                    if ((k != key) && (handshake[i]!!.isNotEmpty())) set += k
-                }
-                handshake[key] = value + set
-                set.removeAll(set)
-            } else break
+            for (k in handshake[i]!!) {
+                if ((k != key) && (handshake[i]!!.isNotEmpty())) set1 += k
+            }
+            handshake[key] = value + set1
+            set1.removeAll(set1)
         }
     }
     return handshake
