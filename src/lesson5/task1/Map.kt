@@ -368,6 +368,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     return -1 to -1
 }
 
+
 /**
  * Очень сложная
  *
