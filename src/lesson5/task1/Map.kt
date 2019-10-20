@@ -221,7 +221,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
     var min = Double.MAX_VALUE
     productName = null
     for ((name, pair) in stuff) {
-        if ((pair.first == kind) && (pair.second < min) && (kind.isNotEmpty())) {
+        if ((pair.first == kind) && (pair.second <= min) && (kind.isNotEmpty())) {
             min = pair.second
             productName = name
         }
