@@ -2,6 +2,9 @@
 
 package lesson5.task1
 
+import kotlin.math.max
+import kotlin.math.min
+
 /**
  * Пример
  *
@@ -328,14 +331,20 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     val set1 = mutableSetOf<String>()
     for ((key, value) in handshake) {
         for (i in value) {
-            handshake[i] = handshake.getOrDefault(i, setOf())
-            if (handshake[i]!!.isNotEmpty()) {
-                for (k in handshake[i]!!) {
-                    if ((k != key)) set1 += k
+            for ((key1, value1) in handshake) {
+                if ((i == key1) && (value1.isNotEmpty())) {
+                    for (k in value1) {
+                        if ((k != key)) set1 += k
+                    }
+                    handshake[key] = value + set1
+                    set1.removeAll(set1)
                 }
-                handshake[key] = value + set1
-                set1.removeAll(set1)
             }
+        }
+    }
+    for ((key, value) in friends) {
+        for (i in value) {
+            handshake[i] = handshake.getOrDefault(i, setOf())
         }
     }
     return handshake
@@ -359,14 +368,16 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    if (list.size < 2) return -1 to -1
-    if (list.max()!! * 2 < number) return -1 to -1
-    for (i in 0 until list.size - 1) {
-        for (j in i + 1 until list.size) {
-            if (list[i] + list[j] == number) return i to j
+    val map = mutableMapOf<Int, Int>()
+    for (i in 0 until list.size) {
+        val first = number - list[i]
+        if (first in map) {
+            return if (first > number / 2) i to map[first]!!
+            else map[first]!! to i
         }
+        else map[list[i]] = i
     }
-    return -1 to -1
+    return Pair(-1, -1)
 }
 
 
