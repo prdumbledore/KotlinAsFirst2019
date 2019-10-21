@@ -339,9 +339,9 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     for ((key, value) in handshake) {
         for (i in value) {
             n = i
-            while (handshake.getValue(n).isNotEmpty() && (key != n) && (key != i)) {
+            while (handshake[n]!!.isNotEmpty() && (key != n)) {
                 for (key1 in handshake.getValue(n)) {
-                    if ((key != i) && (key1 !in value) && (key1 != key)) set += key1
+                    if ((key != i) && (key1 != key)) set += key1
                     n = key1
                 }
             }
