@@ -281,21 +281,22 @@ class Tests {
         )
         assertEquals(
             mapOf(
-                "2" to setOf("4", "5", "6", "7", "8"),
-                "4" to setOf("5", "6", "7", "8"),
-                "5" to setOf("6", "7", "8"),
-                "6" to setOf("7", "8"),
-                "7" to setOf("8"),
-                "8" to setOf()
+                "2" to setOf("4", "5", "6", "a", "b", "c"),
+                "4" to setOf("5", "6"),
+                "5" to setOf("6"),
+                "6" to setOf(),
+                "a" to setOf("b", "c"),
+                "b" to setOf("c"),
+                "c" to setOf()
             ),
             propagateHandshakes(
                 mapOf(
-                    "2" to setOf("4"),
+                    "2" to setOf("4", "a"),
                     "4" to setOf("5"),
                     "5" to setOf("6"),
-                    "6" to setOf("7"),
-                    "7" to setOf("8"),
-                    "8" to setOf()
+                    "a" to setOf("b"),
+                    "b" to setOf("c"),
+                    "c" to setOf()
                 )
             )
         )
