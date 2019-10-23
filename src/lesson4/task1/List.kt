@@ -196,7 +196,7 @@ fun polynom(p: List<Int>, x: Int): Int {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Int>): MutableList<Int> {
-    var sum :Int
+    var sum: Int
     for (i in 0 until list.size - 1) {
         sum = list[i] + list[i + 1]
         list[i + 1] = sum
@@ -215,14 +215,13 @@ fun factorize(n: Int): List<Int> {
     val result = mutableListOf<Int>()
     var num = n
     var del = 2
-    while (!isPrime(num)) {
-        while (num % del != 0) del++
-        while ((num % del == 0) && (num != del)) {
+    while (num > 1) {
+        if (num % del == 0) {
             result.add(del)
             num /= del
         }
+        else del++
     }
-    result.add(num)
     return result
 }
 
@@ -244,7 +243,7 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
  */
 fun convert(n: Int, base: Int): List<Int> {
     val result = mutableListOf<Int>()
-    var mod :Int
+    var mod: Int
     var a = n
     do {
         mod = a % base
@@ -375,43 +374,40 @@ fun russian(n: Int): String {
         "восемьсот",
         "девятьсот"
     )
+
+    fun russians(a: Int, listA: List<String>, listB: List<String>, listC: List<String>): MutableList<String> {
+        val listD = mutableListOf<String>()
+        when (a) {
+            in 10..19 -> listD.add(listC[a % 10])
+            in 1..9 -> listD.add(listA[a])
+            else -> listD.add(listA[a % 10]) && listD.add(listB[a / 10])
+        }
+        return listD
+    }
+
     var num = n
-    var a :Int
+    var a: Int
     val counter = digitNumber(n)
     var count = 1
     while (counter >= count) {
         if (counter == 1) list.add(list1[num])
         if (counter >= 2) {
-            if (count == 2) {
+            if ((count == 2) || (count == 4)) {
                 a = num % 100
                 num /= 100
-                when (a) {
-                    in 10..19 -> list.add(list3[a % 10])
-                    in 1..9 -> list.add(list1[a])
-                    else -> list.add(list1[a % 10]) && list.add(list4[a / 10])
-                }
+                list += if (count == 4) {
+                    when {
+                        a % 10 == 1 -> list.add("тысяча")
+                        (a % 10) in 2..4 -> list.add("тысячи")
+                        else -> list.add("тысяч")
+                    }
+                    russians(a, list2, list4, list3)
+                } else russians(a, list1, list4, list3)
             }
             if ((count == 3) || (count == 6)) {
                 a = num % 10
                 num /= 10
                 if (a != 0) list.add(list5[a])
-            }
-            if (count == 4) {
-                a = num % 100
-                num /= 100
-                when {
-                    a in 10..20 -> list.add("тысяч")
-                    a % 10 == 1 -> list.add("тысяча")
-                    (a % 10) in 2..4 -> list.add("тысячи")
-                    (a % 10) in 5..9 -> list.add("тысяч")
-                    (counter == 6) && (a == 0) -> list.add("тысяч")
-                    else -> list.add("тысяч")
-                }
-                when (a) {
-                    in 10..19 -> list.add(list3[a % 10])
-                    in 1..9 -> list.add(list2[a])
-                    else -> list.add(list2[a % 10]) && list.add(list4[a / 10])
-                }
             }
         }
         count++

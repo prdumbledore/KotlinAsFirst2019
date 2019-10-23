@@ -97,7 +97,7 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
     val result = mutableMapOf<Int, List<String>>()
     for ((name, grade) in grades) {
-        result[grade] = result.getOrDefault(grade, listOf()) + name
+        result[grade] = result.getOrPut(grade) { listOf() } + name
     }
     return result
 }
@@ -177,7 +177,7 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
     val res = mapA.toMutableMap()
     for ((key, value) in mapB) {
         if (key !in res) res[key] = value
-        if (res[key] != mapB[key]) res[key] += (", " + mapB[key])
+        if (res[key] != mapB[key]) res[key] += ", ${mapB[key]}"
     }
     return res
 }
@@ -262,16 +262,10 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
  */
 fun extractRepeats(list: List<String>): Map<String, Int> {
     val extractor = mutableMapOf<String, Int>()
-    val extractor1 = mutableMapOf<String, Int>()
     for (i in list) {
-        extractor1[i] = extractor1.getOrDefault(i, 0) + 1
+        extractor[i] = extractor.getOrDefault(i, 0) + 1
     }
-    for ((word, count) in extractor1) {
-        if (extractor1[word] != 1) {
-            extractor[word] = count
-        }
-    }
-    return extractor
+    return extractor.filter { it.value != 1 }
 }
 
 /**
@@ -284,20 +278,16 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
 fun hasAnagrams(words: List<String>): Boolean {
-    var list = listOf<Char>()
     if (words.size == 1) return false
     if (words.isEmpty()) return false
     for (i in 0 until words.size - 1) {
-        for (char in words[i]) {
-            list = list + char
-        }
-        list.sorted()
         for (j in i + 1 until words.size) {
-            if (words[j].length == words[i].length) {
-                if (canBuildFrom(list, words[j])) return true
+            for (char in words[i]) {
+                if (words[j].length == words[i].length) {
+                    return char in words[j]
+                }
             }
         }
-        list = listOf()
     }
     return false
 }
