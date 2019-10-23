@@ -397,6 +397,7 @@ fun russian(n: Int): String {
                 num /= 100
                 list += if (count == 4) {
                     when {
+                        (a in 10..20) || ((a % 10) in 5..9) || (counter == 6) && (a == 0) -> list.add("тысяч")
                         a % 10 == 1 -> list.add("тысяча")
                         (a % 10) in 2..4 -> list.add("тысячи")
                         else -> list.add("тысяч")

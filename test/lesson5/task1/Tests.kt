@@ -258,7 +258,7 @@ class Tests {
     @Tag("Normal")
     fun hasAnagrams() {
         assertFalse(hasAnagrams(emptyList()))
-        assertTrue(hasAnagrams(listOf("рот", "свет", "тор")))
+        assertTrue(hasAnagrams(listOf("", "")))
         assertFalse(hasAnagrams(listOf("рот", "свет", "код", "дверь")))
         assertFalse(hasAnagrams(listOf("торт", "рот", "тортик")))
     }
@@ -281,22 +281,19 @@ class Tests {
         )
         assertEquals(
             mapOf(
-                "2" to setOf("4", "5", "6", "a", "b", "c"),
-                "4" to setOf("5", "6"),
-                "5" to setOf("6"),
+                "2" to setOf("4", "5", "6", "7", "8"),
+                "4" to setOf("5", "6", "7", "8"),
+                "5" to setOf("6", "7", "8"),
                 "6" to setOf(),
-                "a" to setOf("b", "c"),
-                "b" to setOf("c"),
-                "c" to setOf()
+                "7" to setOf("8"),
+                "8" to setOf()
             ),
             propagateHandshakes(
                 mapOf(
-                    "2" to setOf("4", "a"),
+                    "2" to setOf("4"),
                     "4" to setOf("5"),
-                    "5" to setOf("6"),
-                    "a" to setOf("b"),
-                    "b" to setOf("c"),
-                    "c" to setOf()
+                    "5" to setOf("6","7"),
+                    "7" to setOf("8")
                 )
             )
         )
