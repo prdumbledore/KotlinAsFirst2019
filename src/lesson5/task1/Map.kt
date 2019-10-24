@@ -282,14 +282,13 @@ fun hasAnagrams(words: List<String>): Boolean {
     if (words.isEmpty()) return false
     for (i in 0 until words.size - 1) {
         for (j in i + 1 until words.size) {
-            if (words[j].length == words[i].length) {
-                    if (words[j].isEmpty()) return true
-                    for (char in words[i]) return char in words[j]
-                }
+            if (words[j].isEmpty() || words[i].isEmpty()) return true
+            if (words[i].toList() == words[j].toList()) return true
         }
     }
     return false
 }
+
 
 /**
  * Сложная
@@ -317,29 +316,43 @@ fun hasAnagrams(words: List<String>): Boolean {
  */
 
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
-    val handshake = friends.toMutableMap()
-    var n: String
-    val set = mutableSetOf<String>()
-    for ((key) in friends) {
-        for (i in friends.getValue(key)) {
-            handshake[i] = handshake.getOrDefault(i, mutableSetOf())
-        }
-    }
-    for ((key, value) in handshake) {
-        for (i in value) {
-            n = i
-            while (handshake.getValue(n).isNotEmpty() && (key != n)) {
-                for (key1 in handshake.getValue(n)) {
-                    if ((key != i) && (key1 != key) && (key != n)) {
-                        set += key1
-                        n = key1
-                    }
+    fun findHandshakes(
+        friends: Map<String, Set<String>>,
+        i: String,
+        set: MutableSet<String>,
+        presentKey: String
+    ): MutableSet<String> {
+        var n = i
+        for ((key, value) in friends) {
+            if ((key !in friends.getValue(presentKey)) && (key in friends.getValue(n)) && (key != n) && (key != presentKey)) {
+                set.add(key)
+                if (value.isNotEmpty()) {
+                    n = key
+                    set.addAll(findHandshakes(friends, n, set, presentKey))
                 }
             }
         }
-        handshake[key] = value + set
-        set.removeAll(set)
+        return set
     }
+
+    val handshake = mutableMapOf<String, MutableSet<String>>()
+    val set = mutableSetOf<String>()
+
+    for ((key, value) in friends) {
+        for (i in friends.getValue(key)) {
+            handshake[key] = handshake.getOrDefault(key, mutableSetOf())
+            handshake[i] = handshake.getOrDefault(i, mutableSetOf())
+            handshake[key]!! += value
+        }
+    }
+
+    for ((key, value) in handshake) {
+        for (i in value) {
+            if (handshake[i]!!.isNotEmpty()) handshake[key] = ((value + findHandshakes(handshake, i, set, key)) as MutableSet<String>)
+            set.removeAll(set)
+        }
+    }
+
     return handshake
 }
 
@@ -367,8 +380,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
         if (first in map) {
             return if (first > number / 2) i to map[first]!!
             else map[first]!! to i
-        }
-        else map[list[i]] = i
+        } else map[list[i]] = i
     }
     return Pair(-1, -1)
 }
