@@ -285,7 +285,7 @@ class Tests {
             ),
             propagateHandshakes(
                 mapOf(
-                    "0" to setOf("")
+                    "0" to setOf()
                 )
             )
         )

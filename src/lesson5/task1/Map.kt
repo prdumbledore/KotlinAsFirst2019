@@ -339,10 +339,10 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     val set = mutableSetOf<String>()
 
     for ((key, value) in friends) {
+        handshake[key] = handshake.getOrDefault(key, mutableSetOf())
+        handshake[key]!! += value
         for (i in value) {
-            handshake[key] = handshake.getOrDefault(key, mutableSetOf())
             if(i.isNotEmpty()) handshake[i] = handshake.getOrDefault(i, mutableSetOf())
-            handshake[key]!! += value
         }
     }
 
