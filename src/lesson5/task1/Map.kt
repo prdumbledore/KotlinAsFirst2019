@@ -284,7 +284,7 @@ fun hasAnagrams(words: List<String>): Boolean {
         for (j in i + 1 until words.size) {
             if (words[j].length == words[i].length) {
                     if (words[j].isEmpty()) return true
-                    for (char in words[i]) char in words[j]
+                    for (char in words[i]) return char in words[j]
                 }
         }
     }
@@ -330,8 +330,10 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
             n = i
             while (handshake.getValue(n).isNotEmpty() && (key != n)) {
                 for (key1 in handshake.getValue(n)) {
-                    if ((key != i) && (key1 != key)) set += key1
-                    n = key1
+                    if ((key != i) && (key1 != key) && (key != n)) {
+                        set += key1
+                        n = key1
+                    }
                 }
             }
         }
