@@ -348,7 +348,12 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
 
     for ((key, value) in handshake) {
         for (i in value) {
-            if(i.isNotEmpty()) handshake[key] = ((value + findHandshakes(handshake, i, set, key)) as MutableSet<String>)
+            if(i.isNotEmpty()) {
+                var set1 = mutableSetOf<String>()
+                set1 = findHandshakes(handshake, i, set, key)
+                if (set1.isNotEmpty()) handshake[key] = (value + set1) as MutableSet<String>
+                set1.removeAll(set1)
+            }
             set.removeAll(set)
         }
     }
