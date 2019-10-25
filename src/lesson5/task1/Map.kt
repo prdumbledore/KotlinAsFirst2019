@@ -316,12 +316,13 @@ fun hasAnagrams(words: List<String>): Boolean {
  */
 
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
+    // Через цикл выдавало ошибку time out, решил сделать через рекурсию
     fun findHandshakes(
         friends: Map<String, Set<String>>,
         i: String,
         set: MutableSet<String>,
         presentKey: String
-    ): MutableSet<String> {
+    ): MutableSet<String> { // функция для поиска всех возможных друзей для одного человека
         var n = i
         for ((key, value) in friends) {
             if ((key !in friends.getValue(presentKey)) && (key in friends.getValue(n)) && (key != n) && (key != presentKey)) {
@@ -335,10 +336,10 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
         return set
     }
 
-    val handshake = mutableMapOf<String, MutableSet<String>>()
-    val set = mutableSetOf<String>()
+    val handshake = mutableMapOf<String, MutableSet<String>>()  // итоговый map
+    val set = mutableSetOf<String>() // вспомогательная переменная
 
-    for ((key, value) in friends) {
+    for ((key, value) in friends) {     // тут создаю новые ключи для тех людей, у которых нет ключей
         handshake[key] = handshake.getOrDefault(key, mutableSetOf())
         handshake[key]!! += value
         for (i in value) {
@@ -346,7 +347,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
         }
     }
 
-    for ((key, value) in handshake) {
+    for ((key, value) in handshake) {   //добавляю всех возможных друзей
         for (i in value) {
             if(i.isNotEmpty()) {
                 var set1 = mutableSetOf<String>()
