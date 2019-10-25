@@ -324,13 +324,11 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
         presentKey: String
     ): MutableSet<String> { // функция для поиска всех возможных друзей для одного человека
         var n = i
-        for ((key, value) in friends) {
-            if ((key !in friends.getValue(presentKey)) && (key in friends.getValue(n)) && (key != n) && (key != presentKey)) {
+        for (key in friends.getValue(n)) {
+            if ((key !in friends.getValue(presentKey)) && (key != n) && (key != presentKey)) {
                 set.add(key)
-                if (value.isNotEmpty()) {
-                    n = key
-                    set.addAll(findHandshakes(friends, n, set, presentKey))
-                }
+                n = key
+                set.addAll(findHandshakes(friends, n, set, presentKey))
             }
         }
         return set
@@ -342,7 +340,10 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     for ((key, value) in friends) {     // тут создаю новые ключи для тех людей, у которых нет ключей
         handshake[key] = handshake.getOrDefault(key, mutableSetOf())
         handshake[key]!! += value
-        for (i in value) {
+    }
+
+    for ((key) in friends) {     // тут создаю новые ключи для тех людей, у которых нет ключей
+        for (i in friends.getValue(key)) {
             if(i.isNotEmpty()) handshake[i] = handshake.getOrDefault(i, mutableSetOf())
         }
     }
@@ -350,8 +351,8 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     for ((key, value) in handshake) {   //добавляю всех возможных друзей
         for (i in value) {
             if(i.isNotEmpty()) {
-                var set1 = mutableSetOf<String>()
-                set1 = findHandshakes(handshake, i, set, key)
+                val set1 = mutableSetOf<String>()
+                set1 += findHandshakes(handshake, i, set, key)
                 if (set1.isNotEmpty()) handshake[key] = (value + set1) as MutableSet<String>
                 set1.removeAll(set1)
             }
