@@ -344,20 +344,20 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
 
     for ((key) in friends) {     // тут создаю новые ключи для тех людей, у которых нет ключей
         for (i in friends.getValue(key)) {
-            if(i.isNotEmpty()) handshake[i] = handshake.getOrDefault(i, mutableSetOf())
+            if (i.isNotEmpty()) handshake[i] = handshake.getOrDefault(i, mutableSetOf())
         }
     }
 
     for ((key, value) in handshake) {   //добавляю всех возможных друзей
+        val set1 = mutableSetOf<String>()
         for (i in value) {
-            if(i.isNotEmpty()) {
-                val set1 = mutableSetOf<String>()
+            if (i.isNotEmpty()) {
                 set1 += findHandshakes(handshake, i, set, key)
-                if (set1.isNotEmpty()) handshake[key] = (value + set1) as MutableSet<String>
-                set1.removeAll(set1)
             }
-            set.removeAll(set)
         }
+        if (set1.isNotEmpty()) handshake[key] = (value + set1) as MutableSet<String>
+        set1.removeAll(set1)
+        set.removeAll(set)
     }
 
     return handshake
