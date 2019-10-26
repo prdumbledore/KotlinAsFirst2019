@@ -2,6 +2,7 @@
 
 package lesson5.task1
 
+import javafx.scene.text.FontWeight
 import kotlin.math.max
 import kotlin.math.min
 
@@ -329,7 +330,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
             if ((key !in handshake.getValue(presentKey)) && (key != n) && (key != presentKey)) {
                 set.add(key)
                 set2.add(n)
-                if(key !in set2) {
+                if (key !in set2) {
                     n = key
                     set.addAll(findHandshakes(handshake, key, set, presentKey, set2))
                 }
@@ -418,6 +419,66 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *   bagPacking(
  *     mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000)),
  *     450
- *   ) -> emptySet()
+ *   ) -> emptySet()        //Set<String>
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Map<MutableList<String>, Pair<Int, Int>> {
+    val res = mutableSetOf<String>()
+    val bagSize = mutableMapOf<MutableList<String>, Pair<Int, Int>>()
+    val list = mutableListOf<String>()
+    val listName = mutableListOf<String>()
+    val listPair = mutableListOf<Pair<Int, Int>>()
+    val counter = treasures.size
+    var weight = 0
+    var coin = 0
+    var count = 0
+
+    for ((key, value) in treasures) {
+        list += key
+        bagSize[list] = value
+        list.removeAll(list)
+    }
+
+    for ((key, value) in treasures) {
+        listName += key
+        listPair += value
+    }
+
+ //   for (i in 0 until treasures.size) {
+   //     list += listName[i]
+   //     weight += listPair[i].first
+   //     coin += listPair[i].second
+   //     bagSize[list] = weight to coin
+   //     bag(treasures, listName[i], bagSize, list, listName, listPair, counter, weight, coin, count)
+  //  }
+    return bagSize
+}
+
+fun bag(
+    treasures: Map<String, Pair<Int, Int>>,
+    presentKey: String,
+    bagSize: MutableMap<MutableList<String>, Pair<Int, Int>>,
+    list: MutableList<String>,
+    listName: MutableList<String>,
+    listPair: MutableList<Pair<Int,Int>>,
+    counter: Int,
+    weight: Int,
+    coin: Int,
+    count: Int): MutableMap<MutableList<String>, Pair<Int, Int>> {
+
+    var weight1 = weight
+    var coin1 = coin
+    var count1 = count
+    var k = 2
+    for (i in 0 + k until treasures.size) {
+        list += listName[i]
+        weight1 += listPair[i].first
+        coin1 += listPair[i].second
+        bagSize[list] = weight1 to coin1
+        while (count1 < counter) {
+            count1++
+            bag(treasures, presentKey, bagSize, list, listName, listPair, counter, weight1, coin1, count1)
+        }
+        k++
+    }
+    return bagSize
+}
