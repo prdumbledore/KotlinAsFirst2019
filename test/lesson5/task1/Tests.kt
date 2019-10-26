@@ -298,18 +298,17 @@ class Tests {
         )
         assertEquals(
             mapOf(
-                "0" to setOf("2"),
-                "2" to setOf(),
-                "15c" to setOf("0","1","2","15d"),
-                "1" to setOf("15d"),
-                "15d" to setOf()
+                "9b" to setOf("0","1","3"),
+                "0" to setOf("1","9b","3"),
+                "1" to setOf("0","9b","3"),
+                "3" to setOf("0","1","9b")
             ),
             propagateHandshakes(
                 mapOf(
-                    "0" to setOf("2"),
-                    "2" to setOf(),
-                    "15c" to setOf("0","1"),
-                    "1" to setOf("15d")
+                    "9b" to setOf("0"),
+                    "0" to setOf("1"),
+                    "1" to setOf("0","9b","3"),
+                    "3" to setOf("0","1","9b")
                 )
             )
         )

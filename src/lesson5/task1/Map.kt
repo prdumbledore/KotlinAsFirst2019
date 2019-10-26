@@ -318,17 +318,21 @@ fun hasAnagrams(words: List<String>): Boolean {
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
     // Через цикл выдавало ошибку time out, решил сделать через рекурсию
     fun findHandshakes(
-        friends: Map<String, Set<String>>,
+        handshake: Map<String, Set<String>>,
         i: String,
         set: MutableSet<String>,
-        presentKey: String
+        presentKey: String,
+        set2: MutableSet<String>
     ): MutableSet<String> { // функция для поиска всех возможных друзей для одного человека
         var n = i
-        for (key in friends.getValue(n)) {
-            if ((key !in friends.getValue(presentKey)) && (key != n) && (key != presentKey)) {
+        for (key in handshake.getValue(n)) {
+            if ((key !in handshake.getValue(presentKey)) && (key != n) && (key != presentKey)) {
                 set.add(key)
-                n = key
-                set.addAll(findHandshakes(friends, n, set, presentKey))
+                set2.add(n)
+                if(key !in set2) {
+                    n = key
+                    set.addAll(findHandshakes(handshake, key, set, presentKey, set2))
+                }
             }
         }
         return set
@@ -337,7 +341,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     val handshake = mutableMapOf<String, MutableSet<String>>()  // итоговый map
     val set = mutableSetOf<String>() // вспомогательная переменная
 
-    for ((key, value) in friends) {     // тут создаю новые ключи для тех людей, у которых нет ключей
+    for ((key, value) in friends) {
         handshake[key] = handshake.getOrDefault(key, mutableSetOf())
         handshake[key]!! += value
     }
@@ -348,14 +352,16 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
         }
     }
 
-    for ((key, value) in handshake) {   //добавляю всех возможных друзей
-        val set1 = mutableSetOf<String>()
+    for ((key, value) in handshake) {   //добавляю всех возможных друзей для key
+        val set1 = mutableSetOf<String>() // полный список друзей для key
+        val set2 = mutableSetOf<String>() // список уже проверенных друзей для key
         for (i in value) {
             if (i.isNotEmpty()) {
-                set1 += findHandshakes(handshake, i, set, key)
+                set1 += findHandshakes(handshake, i, set, key, set2)
             }
         }
         if (set1.isNotEmpty()) handshake[key] = (value + set1) as MutableSet<String>
+        set2.removeAll(set2)
         set1.removeAll(set1)
         set.removeAll(set)
     }
