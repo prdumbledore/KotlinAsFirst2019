@@ -482,6 +482,9 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         setA.removeAll(setA)
         setB.removeAll(setB)
     }
+    // На выходе получается таблица с ключами, где в самой правой нижней ячейке будет множество ключей,
+    // сумма цен которых является наибольшей возможной.
+
     res = table[counter][capacity]
     return res
 }
