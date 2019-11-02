@@ -109,7 +109,7 @@ class Tests {
         assertEquals(
             mapOf(5 to listOf("Михаил", "Семён"), 3 to listOf("Марат")),
             buildGrades(mapOf("Марат" to 3, "Семён" to 5, "Михаил" to 5))
-            .mapValues { (_, v) -> v.sorted() }
+                .mapValues { (_, v) -> v.sorted() }
         )
         assertEquals(
             mapOf(3 to listOf("Марат", "Михаил", "Семён")),
@@ -258,7 +258,7 @@ class Tests {
     @Tag("Normal")
     fun hasAnagrams() {
         assertFalse(hasAnagrams(emptyList()))
-        assertTrue(hasAnagrams(listOf("Ug","a", "", "g")))
+        assertTrue(hasAnagrams(listOf("Ug", "a", "", "g")))
         assertFalse(hasAnagrams(listOf("рот", "свет", "код", "дверь")))
         assertFalse(hasAnagrams(listOf("торт", "рот", "тортик")))
     }
@@ -269,13 +269,13 @@ class Tests {
         assertEquals(
             mapOf(
                 "Marat" to setOf("Mikhail", "Sveta"),
-                "Sveta" to setOf("Mikhail","Marat"),
+                "Sveta" to setOf("Mikhail", "Marat"),
                 "Mikhail" to setOf()
             ),
             propagateHandshakes(
                 mapOf(
                     "Marat" to setOf("Sveta"),
-                    "Sveta" to setOf("Mikhail","Marat")
+                    "Sveta" to setOf("Mikhail", "Marat")
                 )
             )
         )
@@ -283,32 +283,32 @@ class Tests {
             mapOf(
                 "2" to setOf(),
                 "3" to setOf("2"),
-                "0" to setOf("2b9","2","3"),
-                "4" to setOf("0","2b9","2","3"),
+                "0" to setOf("2b9", "2", "3"),
+                "4" to setOf("0", "2b9", "2", "3"),
                 "2b9" to setOf()
             ),
             propagateHandshakes(
                 mapOf(
                     "2" to setOf(),
                     "3" to setOf("2"),
-                    "0" to setOf("2b9","2","3"),
+                    "0" to setOf("2b9", "2", "3"),
                     "4" to setOf("0")
                 )
             )
         )
         assertEquals(
             mapOf(
-                "9b" to setOf("0","1","3"),
-                "0" to setOf("1","9b","3"),
-                "1" to setOf("0","9b","3"),
-                "3" to setOf("0","1","9b")
+                "9b" to setOf("0", "1", "3"),
+                "0" to setOf("1", "9b", "3"),
+                "1" to setOf("0", "9b", "3"),
+                "3" to setOf("0", "1", "9b")
             ),
             propagateHandshakes(
                 mapOf(
                     "9b" to setOf("0"),
                     "0" to setOf("1"),
-                    "1" to setOf("0","9b","3"),
-                    "3" to setOf("0","1","9b")
+                    "1" to setOf("0", "9b", "3"),
+                    "3" to setOf("0", "1", "9b")
                 )
             )
         )
@@ -336,10 +336,24 @@ class Tests {
     @Tag("Impossible")
     fun bagPacking() {
         assertEquals(
-            emptyMap<MutableList<String>, Pair<Int, Int>>(),
+            emptySet<String>(),
             bagPacking(
                 mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000)),
+                450
+            )
+        )
+        assertEquals(
+            setOf("Верстак"),
+            bagPacking(
+                mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000), "Железо" to (600 to 6000), "Верстак" to (800 to 8500)),
                 850
+            )
+        )
+        assertEquals(
+            setOf("Слиток","Железо"),
+            bagPacking(
+                mapOf("Кубок" to (300 to 1200), "Слиток" to (500 to 2500), "Железо" to (300 to 2000)),
+                1000
             )
         )
     }

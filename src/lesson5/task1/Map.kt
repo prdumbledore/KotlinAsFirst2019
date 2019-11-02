@@ -2,9 +2,14 @@
 
 package lesson5.task1
 
-import javafx.scene.text.FontWeight
+import lesson3.task1.factorial
+import lesson3.task1.fib
+import java.util.HashMap
+import kotlin.math.absoluteValue
+import kotlin.math.ceil
+import kotlin.math.floor
 import kotlin.math.max
-import kotlin.math.min
+
 
 /**
  * Пример
@@ -421,64 +426,66 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()        //Set<String>
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Map<MutableList<String>, Pair<Int, Int>> {
-    val res = mutableSetOf<String>()
-    val bagSize = mutableMapOf<MutableList<String>, Pair<Int, Int>>()
-    val list = mutableListOf<String>()
-    val listName = mutableListOf<String>()
-    val listPair = mutableListOf<Pair<Int, Int>>()
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    var res = setOf<String>()
     val counter = treasures.size
-    var weight = 0
-    var coin = 0
-    var count = 0
-
+    val bagPack = mutableMapOf<Set<String>, Pair<Int, Int>>()
     for ((key, value) in treasures) {
-        list += key
-        bagSize[list] = value
-        list.removeAll(list)
+        val set = mutableSetOf<String>()
+        set += key
+        bagPack[set] = value
     }
 
-    for ((key, value) in treasures) {
-        listName += key
-        listPair += value
-    }
+    val table = Array(counter + 1) { Array<Set<String>>(capacity + 1) { setOf() } } // нулевая таблица
+    var a = 0
+    var b = 0
+    val setA = mutableSetOf<String>()
+    val setB = mutableSetOf<String>()
 
- //   for (i in 0 until treasures.size) {
-   //     list += listName[i]
-   //     weight += listPair[i].first
-   //     coin += listPair[i].second
-   //     bagSize[list] = weight to coin
-   //     bag(treasures, listName[i], bagSize, list, listName, listPair, counter, weight, coin, count)
-  //  }
-    return bagSize
-}
+    for (i in 1 until counter + 1) {    // прогоняю таблицу, заполняя её максимальными стоимостями для определенного веса
+        val weight = treasures.getValue(treasures.keys.elementAt(i - 1)).first
+        val price = treasures.getValue(treasures.keys.elementAt(i - 1)).second
+        for (j in 1 until capacity + 1) {
+            if (weight <= j) {
+                if (table[i - 1][j].isNotEmpty()) {
+                    for ((k) in bagPack) {
+                        for (k1 in k) {
+                            if (k1 !in setA) {
+                                setA += k1
+                                if (k1 in table[i - 1][j]) a += bagPack.getValue(k).second
+                            }
+                        }
+                    }
+                }
+                if (table[i - 1][j - weight].isNotEmpty()) {
+                    for ((k) in bagPack) {
+                        for (k1 in k) {
+                            if (k1 !in setB) {
+                                setB += k1
+                                if (k1 in table[i - 1][j - weight]) b += bagPack.getValue(k).second
+                            }
+                        }
+                    }
+                }
 
-fun bag(
-    treasures: Map<String, Pair<Int, Int>>,
-    presentKey: String,
-    bagSize: MutableMap<MutableList<String>, Pair<Int, Int>>,
-    list: MutableList<String>,
-    listName: MutableList<String>,
-    listPair: MutableList<Pair<Int,Int>>,
-    counter: Int,
-    weight: Int,
-    coin: Int,
-    count: Int): MutableMap<MutableList<String>, Pair<Int, Int>> {
-
-    var weight1 = weight
-    var coin1 = coin
-    var count1 = count
-    var k = 2
-    for (i in 0 + k until treasures.size) {
-        list += listName[i]
-        weight1 += listPair[i].first
-        coin1 += listPair[i].second
-        bagSize[list] = weight1 to coin1
-        while (count1 < counter) {
-            count1++
-            bag(treasures, presentKey, bagSize, list, listName, listPair, counter, weight1, coin1, count1)
+                if (a <= b + price) {
+                    val set = mutableSetOf<String>()
+                    set += (table[i - 1][j - weight] + bagPack.keys.elementAt(i - 1))
+                    table[i][j] = set
+                }
+                else table[i][j] = table[i - 1][j]
+            }
+            else table[i][j] = table[i - 1][j]
         }
-        k++
+        a = 0
+        b = 0
+        setA.removeAll(setA)
+        setB.removeAll(setB)
     }
-    return bagSize
+    res = table[counter][capacity]
+    return res
 }
+
+
+
+
