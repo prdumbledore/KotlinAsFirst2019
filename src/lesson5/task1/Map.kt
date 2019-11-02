@@ -446,7 +446,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         val weight = treasures.getValue(treasures.keys.elementAt(i - 1)).first
         val price = treasures.getValue(treasures.keys.elementAt(i - 1)).second
         for (j in 1 until capacity + 1) {
-            if (weight <= j) {
+            if (weight < j) {
                 if (table[i - 1][j].isNotEmpty()) {
                     for ((k) in bagPack) {
                         for (k1 in k) {
