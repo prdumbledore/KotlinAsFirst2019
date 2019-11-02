@@ -446,7 +446,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         val weight = treasures.getValue(treasures.keys.elementAt(i - 1)).first
         val price = treasures.getValue(treasures.keys.elementAt(i - 1)).second
         for (j in 1 until capacity + 1) {
-            if (weight < j) {
+            if (weight <= j) {
                 if (table[i - 1][j].isNotEmpty()) {
                     for ((k) in bagPack) {
                         for (k1 in k) {
@@ -476,11 +476,11 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
                 else table[i][j] = table[i - 1][j]
             }
             else table[i][j] = table[i - 1][j]
+            a = 0
+            b = 0
+            setA.removeAll(setA)
+            setB.removeAll(setB)
         }
-        a = 0
-        b = 0
-        setA.removeAll(setA)
-        setB.removeAll(setB)
     }
     // На выходе получается таблица с ключами, где в самой правой нижней ячейке будет множество ключей,
     // сумма цен которых является наибольшей возможной.
