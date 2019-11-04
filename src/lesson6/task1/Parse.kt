@@ -213,7 +213,7 @@ fun plusMinus(expression: String): Int1 {
     val match = Regex("""\d+|(\d+ ([+\-])? \d.*)*""").matches(expression)
     var res: Int1
 
-    if (match) {
+    if (match && expression.isNotEmpty()) {
         val list = expression.split(" ")
         res = list[0].toInt()
         for (i in 1 until list.size step 2) {
@@ -239,7 +239,7 @@ fun firstDuplicateIndex(str: String): Int1 {
     var result = -1
     if (list.size == 1) return -1
 
-    for (i in 0 until list.size) {
+    for (i in 0 until list.size - 1) {
         if (list[i] == list[i + 1]) {
            result = 0
             for (j in 0 until i) {
@@ -265,7 +265,7 @@ fun firstDuplicateIndex(str: String): Int1 {
  */
 fun mostExpensive(description: String): String {
     val match = Regex("""(\S+\s(\d+.\d+);?\s?)+""").matches(description)
-    var num = 0.0
+    var num = -1.0
     var str = ""
     if (match && description.isNotEmpty()) {
         val list = description.split("; ")
