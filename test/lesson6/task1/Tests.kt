@@ -38,7 +38,7 @@ class Tests {
         assertEquals("", dateStrToDigit("3 мартобря 1918"))
         assertEquals("18.11.2018", dateStrToDigit("18 ноября 2018"))
         assertEquals("", dateStrToDigit("23"))
-        assertEquals("03.04.2011", dateStrToDigit("3 апреля 2011"))
+        assertEquals("01.04.2011", dateStrToDigit("1 апреля 2011"))
         assertEquals("", dateStrToDigit("32 сентября 2011"))
         assertEquals("", dateStrToDigit("29 февраля 1993"))
     }
@@ -48,7 +48,7 @@ class Tests {
     fun dateDigitToStr() {
         assertEquals("15 июля 2016", dateDigitToStr("15.07.2016"))
         assertEquals("", dateDigitToStr("01.02.20.19"))
-        assertEquals("", dateDigitToStr("28.00.2000"))
+        assertEquals("", dateDigitToStr("28.133.2000"))
         assertEquals("3 апреля 2011", dateDigitToStr("03.04.2011"))
         assertEquals("", dateDigitToStr("ab.cd.ef"))
         assertEquals("", dateDigitToStr("32.09.2011"))
@@ -72,7 +72,7 @@ class Tests {
     @Tag("Normal")
     fun bestLongJump() {
         assertEquals(717, bestLongJump("706 % - 717 - 703"))
-        assertEquals(-1, bestLongJump("% - - % -"))
+        assertEquals(717, bestLongJump("701 % - 717 - 703"))
         assertEquals(754, bestLongJump("700 717 707 % 754"))
         assertEquals(-1, bestLongJump("700 + 700"))
 
@@ -81,16 +81,16 @@ class Tests {
     @Test
     @Tag("Hard")
     fun bestHighJump() {
+        assertEquals(230, bestHighJump("220 - 224 %- 228 %- 230 + 232 %%- 234 %"))
         assertEquals(226, bestHighJump("226 +"))
         assertEquals(-1, bestHighJump("???"))
-        assertEquals(230, bestHighJump("220 + 224 %+ 228 %- 230 + 232 %%- 234 %"))
     }
 
     @Test
     @Tag("Hard")
     fun plusMinus() {
         assertEquals(0, plusMinus("0"))
-        assertEquals(4, plusMinus("2 + 2"))
+        assertEquals(32, plusMinus("10 + 22"))
         assertEquals(6, plusMinus("2 + 31 - 40 + 13"))
         assertEquals(-1, plusMinus("0 - 1"))
         assertThrows(IllegalArgumentException::class.java) { plusMinus("+2") }
@@ -103,10 +103,10 @@ class Tests {
     @Test
     @Tag("Hard")
     fun firstDuplicateIndex() {
-        assertEquals(-1, firstDuplicateIndex("Привет"))
         assertEquals(9, firstDuplicateIndex("Он пошёл в в школу"))
         assertEquals(40, firstDuplicateIndex("Яблоко упало на ветку с ветки оно упало на на землю"))
         assertEquals(9, firstDuplicateIndex("Мы пошли прямо Прямо располагался магазин"))
+        assertEquals(-1, firstDuplicateIndex("Привет"))
     }
 
     @Test
