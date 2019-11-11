@@ -325,7 +325,7 @@ fun fromRoman(roman: String): Int = TODO()
  * то есть если в программе присутствует некорректный символ или непарная скобка, то должно быть выброшено
  * IllegalArgumentException.
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
- *
+ *//
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     val res = MutableList(cells) { 0 }
