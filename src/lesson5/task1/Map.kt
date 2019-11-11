@@ -2,14 +2,6 @@
 
 package lesson5.task1
 
-import lesson3.task1.factorial
-import lesson3.task1.fib
-import java.util.HashMap
-import kotlin.math.absoluteValue
-import kotlin.math.ceil
-import kotlin.math.floor
-import kotlin.math.max
-
 
 /**
  * Пример
@@ -247,12 +239,8 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    for (i in word) {
-        if ((i !in chars) && (i.toUpperCase() !in chars) && (i.toLowerCase() !in chars)) return false
-    }
-    return true
-}
+fun canBuildFrom(chars: List<Char>, word: String): Boolean =
+    (word.isEmpty() || word.toLowerCase().toCharArray().toSet() == chars.toSet())
 
 /**
  * Средняя
@@ -286,11 +274,13 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
 fun hasAnagrams(words: List<String>): Boolean {
     if (words.size == 1) return false
     if (words.isEmpty()) return false
-    for (i in 0 until words.size - 1) {
-        for (j in i + 1 until words.size) {
-            if (words[j].isEmpty() || words[i].isEmpty()) return true
-            if (words[i].toList() == words[j].toList()) return true
-        }
+    val map = mutableMapOf<String, Int>()
+    for (word in words) {
+        if (word.isEmpty()) return true
+        map[word.toCharArray().sorted().toString()] = map.getOrDefault(word.toCharArray().sorted().toString(), 0) + 1
+    }
+    for ((key) in map) {
+        if (map.getValue(key) > 1) return true
     }
     return false
 }
@@ -328,16 +318,16 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
         i: String,
         set: MutableSet<String>,
         presentKey: String,
-        set2: MutableSet<String>
+        checkedFriendsSet: MutableSet<String>
     ): MutableSet<String> { // функция для поиска всех возможных друзей для одного человека
         var n = i
         for (key in handshake.getValue(n)) {
             if ((key !in handshake.getValue(presentKey)) && (key != n) && (key != presentKey)) {
                 set.add(key)
-                set2.add(n)
-                if (key !in set2) {
+                checkedFriendsSet.add(n)
+                if (key !in checkedFriendsSet) {
                     n = key
-                    set.addAll(findHandshakes(handshake, key, set, presentKey, set2))
+                    set.addAll(findHandshakes(handshake, key, set, presentKey, checkedFriendsSet))
                 }
             }
         }
@@ -359,16 +349,16 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     }
 
     for ((key, value) in handshake) {   //добавляю всех возможных друзей для key
-        val set1 = mutableSetOf<String>() // полный список друзей для key
-        val set2 = mutableSetOf<String>() // список уже проверенных друзей для key
+        val allFriendsSet = mutableSetOf<String>() // полный список друзей для key
+        val checkedFriendsSet = mutableSetOf<String>() // список уже проверенных друзей для key
         for (i in value) {
             if (i.isNotEmpty()) {
-                set1 += findHandshakes(handshake, i, set, key, set2)
+                allFriendsSet += findHandshakes(handshake, i, set, key, checkedFriendsSet)
             }
         }
-        if (set1.isNotEmpty()) handshake[key] = (value + set1) as MutableSet<String>
-        set2.removeAll(set2)
-        set1.removeAll(set1)
+        if (allFriendsSet.isNotEmpty()) handshake[key] = (value + allFriendsSet) as MutableSet<String>
+        checkedFriendsSet.removeAll(checkedFriendsSet)
+        allFriendsSet.removeAll(allFriendsSet)
         set.removeAll(set)
     }
 
@@ -396,9 +386,10 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     val map = mutableMapOf<Int, Int>()
     for (i in 0 until list.size) {
         val first = number - list[i]
-        if (first in map) {
-            return if (first > number / 2) i to map[first]!!
-            else map[first]!! to i
+        val value = map[first]
+        if (value != null && first in map) {
+            return if (first > number / 2) i to value
+            else value to i
         } else map[list[i]] = i
     }
     return Pair(-1, -1)
@@ -427,20 +418,15 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *   ) -> emptySet()        //Set<String>
  */
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
-    val res: Set<String>
     val counter = treasures.size
     val bagPack = mutableMapOf<Set<String>, Pair<Int, Int>>()
-    for ((key, value) in treasures) {
-        val set = mutableSetOf<String>()
-        set += key
-        bagPack[set] = value
-    }
+    for ((key, value) in treasures) bagPack[setOf(key)] = value
 
     val table = Array(counter + 1) { Array<Set<String>>(capacity + 1) { setOf() } } // нулевая таблица
-    var a = 0
-    var b = 0
-    val setA = mutableSetOf<String>()
-    val setB = mutableSetOf<String>()
+    var priceInTopCell = 0
+    var priceInTopAndMinWeightCell = 0
+    val setPriceInTopCell = mutableSetOf<String>()
+    val setPriceInTopAndMinWeightCell = mutableSetOf<String>()
 
     for (i in 1 until counter + 1) {    // прогоняю таблицу, заполняя её максимальными стоимостями для определенного веса
         val weight = treasures.getValue(treasures.keys.elementAt(i - 1)).first
@@ -448,45 +434,43 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         for (j in 1 until capacity + 1) {
             if (weight <= j) {
                 if (table[i - 1][j].isNotEmpty()) {
-                    for ((k) in bagPack) {
-                        for (k1 in k) {
-                            if (k1 !in setA) {
-                                setA += k1
-                                if (k1 in table[i - 1][j]) a += bagPack.getValue(k).second
+                    for ((Item) in bagPack) {
+                        for (ItemName in Item) {
+                            if (ItemName !in setPriceInTopCell) {
+                                setPriceInTopCell += ItemName
+                                if (ItemName in table[i - 1][j]) priceInTopCell += bagPack.getValue(Item).second
                             }
                         }
                     }
                 }
                 if (table[i - 1][j - weight].isNotEmpty()) {
-                    for ((k) in bagPack) {
-                        for (k1 in k) {
-                            if (k1 !in setB) {
-                                setB += k1
-                                if (k1 in table[i - 1][j - weight]) b += bagPack.getValue(k).second
+                    for ((Item) in bagPack) {
+                        for (ItemName in Item) {
+                            if (ItemName !in setPriceInTopAndMinWeightCell) {
+                                setPriceInTopAndMinWeightCell += ItemName
+                                if (ItemName in table[i - 1][j - weight])
+                                    priceInTopAndMinWeightCell += bagPack.getValue(Item).second
                             }
                         }
                     }
                 }
 
-                if (a <= b + price) {
+                if (priceInTopCell <= priceInTopAndMinWeightCell + price) {
                     val set = mutableSetOf<String>()
                     set += (table[i - 1][j - weight] + bagPack.keys.elementAt(i - 1))
                     table[i][j] = set
-                }
-                else table[i][j] = table[i - 1][j]
-            }
-            else table[i][j] = table[i - 1][j]
-            a = 0
-            b = 0
-            setA.removeAll(setA)
-            setB.removeAll(setB)
+                } else table[i][j] = table[i - 1][j]
+            } else table[i][j] = table[i - 1][j]
+            priceInTopCell = 0
+            priceInTopAndMinWeightCell = 0
+            setPriceInTopCell.removeAll(setPriceInTopCell)
+            setPriceInTopAndMinWeightCell.removeAll(setPriceInTopAndMinWeightCell)
         }
     }
     // На выходе получается таблица с ключами, где в самой правой нижней ячейке будет множество ключей,
     // сумма цен которых является наибольшей возможной.
 
-    res = table[counter][capacity]
-    return res
+    return table[counter][capacity]
 }
 
 

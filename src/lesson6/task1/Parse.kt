@@ -3,8 +3,6 @@
 package lesson6.task1
 
 import lesson2.task2.daysInMonth
-import java.io.File.separator
-import kotlin.Int as Int1
 
 /**
  * Пример
@@ -12,7 +10,7 @@ import kotlin.Int as Int1
  * Время представлено строкой вида "11:34:45", содержащей часы, минуты и секунды, разделённые двоеточием.
  * Разобрать эту строку и рассчитать количество секунд, прошедшее с начала дня.
  */
-fun timeStrToSeconds(str: String): Int1 {
+fun timeStrToSeconds(str: String): Int {
     val parts = str.split(":")
     var result = 0
     for (part in parts) {
@@ -28,7 +26,7 @@ fun timeStrToSeconds(str: String): Int1 {
  * Дано число n от 0 до 99.
  * Вернуть его же в виде двухсимвольной строки, от "00" до "99"
  */
-fun twoDigitStr(n: Int1) = if (n in 0..9) "0$n" else "$n"
+fun twoDigitStr(n: Int) = if (n in 0..9) "0$n" else "$n"
 
 /**
  * Пример
@@ -36,7 +34,7 @@ fun twoDigitStr(n: Int1) = if (n in 0..9) "0$n" else "$n"
  * Дано seconds -- время в секундах, прошедшее с начала дня.
  * Вернуть текущее время в виде строки в формате "ЧЧ:ММ:СС".
  */
-fun timeSecondsToStr(seconds: Int1): String {
+fun timeSecondsToStr(seconds: Int): String {
     val hour = seconds / 3600
     val minute = (seconds % 3600) / 60
     val second = seconds % 60
@@ -61,18 +59,6 @@ fun main() {
     }
 }
 
-
-/**
- * Средняя
- *
- * Дата представлена строкой вида "15 июля 2016".
- * Перевести её в цифровой формат "15.07.2016".
- * День и месяц всегда представлять двумя цифрами, например: 03.04.2011.
- * При неверном формате входной строки вернуть пустую строку.
- *
- * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
- * входными данными.
- */
 val list = listOf(
     "января",
     "февраля",
@@ -88,11 +74,22 @@ val list = listOf(
     "декабря"
 )
 
+/**
+ * Средняя
+ *
+ * Дата представлена строкой вида "15 июля 2016".
+ * Перевести её в цифровой формат "15.07.2016".
+ * День и месяц всегда представлять двумя цифрами, например: 03.04.2011.
+ * При неверном формате входной строки вернуть пустую строку.
+ *
+ * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
+ * входными данными.
+ */
 fun dateStrToDigit(str: String): String {
     val list1 = str.split(" ")
     try {
         val day = list1[0].toInt()
-        val month: Int1
+        val month: Int
         val year = list1[2].toInt()
 
         if (list1[1] in list) month = list.indexOf(list1[1]) + 1
@@ -101,7 +98,7 @@ fun dateStrToDigit(str: String): String {
         return if (day !in 1..daysInMonth(month, year)) ""
         else return String.format("%02d.%02d.%d", day, month, year)
 
-    } catch (e: Exception) {
+    } catch (e: IndexOutOfBoundsException) {
         return ""
     }
 }
@@ -149,7 +146,7 @@ fun dateDigitToStr(digital: String): String {
 fun flattenPhoneNumber(phone: String): String {
     val m = Regex("""\+? *\d+ *(\( *\d+ *-* *\d*\))?( *\d*-*)*""").matches(phone)
     return if (!m) ""
-    else Regex("""[-\(\)\s]""").replace(phone, "")
+    else Regex("""[-()\s]""").replace(phone, "")
 }
 
 /**
@@ -162,7 +159,7 @@ fun flattenPhoneNumber(phone: String): String {
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int1 {
+fun bestLongJump(jumps: String): Int {
     val match = Regex("""\d+( ([-%])|( \d+))*""").matches(jumps)
     var list = listOf<String>()
     if (match) list = Regex("""[-%]""").replace(jumps, "").split(" ")
@@ -185,7 +182,7 @@ fun bestLongJump(jumps: String): Int1 {
  * При нарушении формата входной строки, а также в случае отсутствия удачных попыток,
  * вернуть -1.
  */
-fun bestHighJump(jumps: String): Int1 {
+fun bestHighJump(jumps: String): Int {
     val match = Regex("""((\d+ \+)+)|((\d+)| ([-%+])*)*""").matches(jumps)
     var max = 0
 
@@ -209,9 +206,9 @@ fun bestHighJump(jumps: String): Int1 {
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int1 {
+fun plusMinus(expression: String): Int {
     val match = Regex("""\d+|(\d+ ([+\-])? \d.*)*""").matches(expression)
-    var res: Int1
+    var res: Int
 
     if (match && expression.isNotEmpty()) {
         val list = expression.split(" ")
@@ -234,14 +231,14 @@ fun plusMinus(expression: String): Int1 {
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int1 {
+fun firstDuplicateIndex(str: String): Int {
     val list = str.toLowerCase().split(" ")
     var result = -1
     if (list.size == 1) return -1
 
     for (i in 0 until list.size - 1) {
         if (list[i] == list[i + 1]) {
-           result = 0
+            result = 0
             for (j in 0 until i) {
                 result += (list[j].length + 1)
             }
@@ -264,7 +261,7 @@ fun firstDuplicateIndex(str: String): Int1 {
  * Все цены должны быть больше либо равны нуля.
  */
 fun mostExpensive(description: String): String {
-    val match = Regex("""(\S+\s(\d+.\d+|\d+);?\s?)+""").matches(description)
+    val match = Regex("""([А-ЯЁёа-я]+\s(\d+.\d+|\d+);?\s?)+""").matches(description)
     var num = -1.0
     var str = ""
     if (match && description.isNotEmpty()) {
@@ -277,7 +274,6 @@ fun mostExpensive(description: String): String {
             }
         }
     }
-    if (num == 0.0) return "Any good with price 0.0"
     return str
 }
 
@@ -292,7 +288,7 @@ fun mostExpensive(description: String): String {
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int1 = TODO()
+fun fromRoman(roman: String): Int = TODO()
 
 /**
  * Очень сложная
@@ -330,4 +326,67 @@ fun fromRoman(roman: String): Int1 = TODO()
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int1, commands: String, limit: Int1): List<Int1> = TODO()
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    val res = MutableList(cells) { 0 }
+    var counter = limit
+    var position = cells / 2
+    var com = 0
+    val filter = "<>+-[] "
+    var it = 0
+    for (i in commands) {
+        require(i in filter)
+        when (i) {
+            '[' -> it++
+            ']' -> it--
+        }
+    }
+    require(it == 0)
+
+    fun emptyCycle(): Int { // бежит вперёд, с учётом того, есть ли внутри ещё цикл []
+        var a = 1
+        while (a > 0) {
+            com++
+            when (commands[com]) {
+                '[' -> a++
+                ']' -> a--
+            }
+        }
+        return com
+    }
+
+    fun conveyor(): Int {  // если значение под ] не равно нулю, бежит к началу списка с учетом вложенности циклов []
+        var a = 1
+        while (a > 0) {
+            com--
+            when (commands[com]) {
+                '[' -> a--
+                ']' -> a++
+            }
+        }
+        return com
+    }
+
+
+    while (com < commands.length && counter > 0) {
+        check(position in 0 until cells)
+        when (commands[com]) {
+            '+' -> res[position]++
+            '-' -> res[position]--
+            '>' -> position++
+            '<' -> position--
+            '[' -> if (res[position] == 0) { // если значение под [ равно нулю, то пропускаю этот цикл
+                com = emptyCycle()
+            }
+            ']' -> if (res[position] != 0) { // возвращаюсь к началу цикла
+                com = conveyor()
+            }
+        }
+        com++
+        counter--
+    }
+
+    return res
+}
+
+
+
