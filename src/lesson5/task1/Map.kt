@@ -203,7 +203,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
 }
 
 /**
- * Средняя
+ * Средняя//
  *
  * Входными данными является ассоциативный массив
  * "название товара"-"пара (тип товара, цена товара)"
