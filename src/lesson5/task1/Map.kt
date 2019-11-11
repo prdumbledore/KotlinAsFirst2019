@@ -2,14 +2,6 @@
 
 package lesson5.task1
 
-import lesson3.task1.factorial
-import lesson3.task1.fib
-import java.util.HashMap
-import kotlin.math.absoluteValue
-import kotlin.math.ceil
-import kotlin.math.floor
-import kotlin.math.max
-
 
 /**
  * Пример
@@ -248,10 +240,9 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    for (i in word) {
-        if ((i !in chars) && (i.toUpperCase() !in chars) && (i.toLowerCase() !in chars)) return false
-    }
-    return true
+    if (word.isEmpty()) return true
+    if (word.toLowerCase().toCharArray().toSet() == chars.toSet()) return true
+    return false
 }
 
 /**
@@ -472,10 +463,8 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
                     val set = mutableSetOf<String>()
                     set += (table[i - 1][j - weight] + bagPack.keys.elementAt(i - 1))
                     table[i][j] = set
-                }
-                else table[i][j] = table[i - 1][j]
-            }
-            else table[i][j] = table[i - 1][j]
+                } else table[i][j] = table[i - 1][j]
+            } else table[i][j] = table[i - 1][j]
             a = 0
             b = 0
             setA.removeAll(setA)
