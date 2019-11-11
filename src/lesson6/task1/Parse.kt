@@ -334,8 +334,6 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var counter = limit
     var position = cells / 2
     var com = 0
-    val str = commands.filter { it == '[' || it == ']' }
-    if (str.isNotEmpty()) require(str.first() != ']' || str.last() != '[')
     val filter = "<>+-[] "
     var it = 0
     for (i in commands) {
@@ -344,6 +342,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             '[' -> it++
             ']' -> it--
         }
+        require(it >= 0)
     }
     require(it == 0)
 
@@ -371,7 +370,6 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         return com
     }
 
-
     while (com < commands.length && counter > 0) {
         check(position in 0 until cells)
         when (commands[com]) {
@@ -390,7 +388,6 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         counter--
     }
     check(position in 0 until cells)
-
     return res
 }
 
