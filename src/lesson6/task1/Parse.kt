@@ -389,6 +389,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         com++
         counter--
     }
+    check(position in 0 until cells)
 
     return res
 }

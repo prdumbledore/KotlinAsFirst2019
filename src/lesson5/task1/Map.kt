@@ -244,8 +244,10 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     for (i in chars) {
         set.plusAssign(i.toLowerCase())
     }
-    if (word.isEmpty() || word.toLowerCase().toCharArray().toSet() == set) return true
-    return false
+    for (i in word.toLowerCase()) {
+        if (i !in set) return false
+    }
+    return true
 }
 /**
  * Средняя

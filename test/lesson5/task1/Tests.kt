@@ -234,7 +234,7 @@ class Tests {
     fun canBuildFrom() {
         assertFalse(canBuildFrom(emptyList(), "foo"))
         assertTrue(canBuildFrom(listOf('F'), "F"))
-        assertTrue(canBuildFrom(listOf('a', 'm', 'r', 't'), "Marat"))
+        assertTrue(canBuildFrom(listOf('x', 'a'), "a"))
     }
 
     @Test
