@@ -37,7 +37,7 @@ class Tests {
         assertEquals("15.07.2016", dateStrToDigit("15 июля 2016"))
         assertEquals("", dateStrToDigit("3 мартобря 1918"))
         assertEquals("18.11.2018", dateStrToDigit("18 ноября 2018"))
-        assertEquals("", dateStrToDigit("23"))
+        assertEquals("", dateStrToDigit(""))
         assertEquals("01.04.2011", dateStrToDigit("1 апреля 2011"))
         assertEquals("", dateStrToDigit("32 сентября 2011"))
         assertEquals("", dateStrToDigit("29 февраля 1993"))
@@ -64,7 +64,7 @@ class Tests {
         assertEquals("", flattenPhoneNumber("+12 () 4-5"))
         assertEquals("+425667", flattenPhoneNumber("+42 56 -- 67"))
         assertEquals("+42566789", flattenPhoneNumber("+42(56 -- 67)89"))
-        assertEquals("", flattenPhoneNumber("ab-123"))
+        assertEquals("", flattenPhoneNumber(""))
         assertEquals("", flattenPhoneNumber("134_+874"))
     }
 
@@ -150,7 +150,7 @@ class Tests {
             computeDeviceCells(11, "<<<<< + >>>>>>>>>> --[<-] >+[>+] >++[--< <[<] >+[>+] >++]", 256)
         )
 
-        assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(10, "===", 3) }
+        assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(10, "+>]+>+>[", 3) }
         assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(10, "+>+>[+>", 3) }
         assertThrows(IllegalStateException::class.java) { computeDeviceCells(20, ">>>>>>>>>>>>>", 12) }
     }

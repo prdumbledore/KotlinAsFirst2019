@@ -101,6 +101,9 @@ fun dateStrToDigit(str: String): String {
     } catch (e: IndexOutOfBoundsException) {
         return ""
     }
+    catch (e: NumberFormatException) {
+        return ""
+    }
 }
 
 /**
@@ -331,6 +334,8 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var counter = limit
     var position = cells / 2
     var com = 0
+    val str = commands.filter { it == '[' || it == ']' }
+    if (str.isNotEmpty()) require(str.first() != ']' || str.last() != '[')
     val filter = "<>+-[] "
     var it = 0
     for (i in commands) {

@@ -239,9 +239,14 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean =
-    (word.isEmpty() || word.toLowerCase().toCharArray().toSet() == chars.toSet())
-
+fun canBuildFrom(chars: List<Char>, word: String): Boolean {
+    val set = mutableSetOf<Char>()
+    for (i in chars) {
+        set.plusAssign(i.toLowerCase())
+    }
+    if (word.isEmpty() || word.toLowerCase().toCharArray().toSet() == set) return true
+    return false
+}
 /**
  * Средняя
  *
@@ -276,7 +281,6 @@ fun hasAnagrams(words: List<String>): Boolean {
     if (words.isEmpty()) return false
     val map = mutableMapOf<String, Int>()
     for (word in words) {
-        if (word.isEmpty()) return true
         map[word.toCharArray().sorted().toString()] = map.getOrDefault(word.toCharArray().sorted().toString(), 0) + 1
     }
     for ((key) in map) {
