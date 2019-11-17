@@ -3,6 +3,8 @@
 package lesson7.task1
 
 import java.io.File
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Пример
@@ -53,7 +55,14 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Регистр букв игнорировать, то есть буквы е и Е считать одинаковыми.
  *
  */
-fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> = TODO()
+fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
+    val map = mutableMapOf<String, Int>()
+    val text = File(inputName).readText().toLowerCase()
+    for (word in substrings) {
+        map[word] = text.windowed(word.length) { if (it == word.toLowerCase()) 1 else 0 }.sum()
+    }
+    return map
+}
 
 
 /**
@@ -70,7 +79,29 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    TODO()
+    val vowelLetters = mapOf(
+        'ы' to 'и',
+        'ю' to 'у',
+        'я' to 'а',
+        'Ы' to 'И',
+        'Ю' to 'У',
+        'Я' to 'А'
+    )
+    val consonantLetter = listOf('ж', 'ч', 'ш', 'щ')
+    val txt = StringBuilder()
+    val text = File(inputName).readLines()
+    for (line in text) {
+        txt.append(line[0].toString())
+        for (char in 1 until line.length) {
+            if (line[char - 1].toLowerCase() in consonantLetter && line[char].toLowerCase() in vowelLetters.keys) {
+                txt.append(vowelLetters[line[char]])
+            } else {
+                txt.append(line[char])
+            }
+        }
+        txt.append("\n")
+    }
+    File(outputName).writeText(txt.toString())
 }
 
 /**
@@ -91,8 +122,23 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val text = File(inputName).readLines()
+    val txt = StringBuilder()
+    val sortedLine = mutableListOf<String>()
+    var lineMaxSize = 0
+    for (line in text) {
+        sortedLine.add(line.trim())
+        lineMaxSize = max(lineMaxSize, line.trim().length)
+    }
+    for (line in sortedLine) {
+        val lineDifference = (lineMaxSize - line.length) / 2
+        txt.append(" ".repeat(lineDifference) + line + "\n")
+    }
+    File(outputName).writeText(txt.toString())
 }
+// Почему, когда я добавляю line.trim() в список, и беру строки из списка, программа работает а если просто беру line.trim():
+// txt.append(" ".repeat(lineDifference) + line.trim() + "\n")
+// то программа не работает?
 
 /**
  * Сложная
@@ -111,7 +157,7 @@ fun centerFile(inputName: String, outputName: String) {
  * 4) Число строк в выходном файле должно быть равно числу строк во входном (в т. ч. пустых).
  *
  * Равномерность определяется следующими формальными правилами:
- * 5) Число пробелов между каждыми двумя парами соседних слов не должно отличаться более, чем на 1.
+ *0 5) Число пробелов между каждыми двумя парами соседних слов не должно отличаться более, чем на 1.
  * 6) Число пробелов между более левой парой соседних слов должно быть больше или равно числу пробелов
  *    между более правой парой соседних слов.
  *
@@ -122,7 +168,38 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    val text = File(inputName).readLines()
+    val txt = StringBuilder()
+    val sortedLine = mutableListOf<String>()
+    var lineMaxSize = 0
+    for (line in text) {
+        sortedLine.add(line.trim())
+        lineMaxSize = max(lineMaxSize, line.trim().length)
+    }
+    for (line in sortedLine) {
+        val lineDifference = lineMaxSize - line.length
+        val wordCount = line.split(" ")
+        var minGapsSize: Int
+        var residualGaps: Int
+        if (wordCount.size > 1) {
+            minGapsSize = lineDifference / (wordCount.size - 1)
+            residualGaps = lineDifference - (minGapsSize * (wordCount.size - 1))
+        } else {
+            minGapsSize = -1
+            residualGaps = 0
+        }
+        for (word in 0 until wordCount.size - 1) {
+            if (residualGaps > 0) {
+                txt.append(wordCount[word] + " ".repeat(minGapsSize + 2))
+                residualGaps--
+            } else {
+                txt.append(wordCount[word] + " ".repeat(minGapsSize + 1))
+            }
+        }
+        txt.append(wordCount.last() + "\n")
+
+    }
+    File(outputName).writeText(txt.toString())
 }
 
 /**
@@ -244,21 +321,69 @@ Suspendisse ~~et elit in enim tempus iaculis~~.
  *
  * Соответствующий выходной файл:
 <html>
-    <body>
-        <p>
-            Lorem ipsum <i>dolor sit amet</i>, consectetur <b>adipiscing</b> elit.
-            Vestibulum lobortis. <s>Est vehicula rutrum <i>suscipit</i></s>, ipsum <s>lib</s>ero <i>placerat <b>tortor</b></i>.
-        </p>
-        <p>
-            Suspendisse <s>et elit in enim tempus iaculis</s>.
-        </p>
-    </body>
+<body>
+<p>
+Lorem ipsum <i>dolor sit amet</i>, consectetur <b>adipiscing</b> elit.
+Vestibulum lobortis. <s>Est vehicula rutrum <i>suscipit</i></s>, ipsum <s>lib</s>ero <i>placerat <b>tortor</b></i>.
+</p>
+<p>
+Suspendisse <s>et elit in enim tempus iaculis</s>.
+</p>
+</body>
 </html>
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    val text = File(inputName).readLines()
+    val txt = StringBuilder()
+    var i = 0 // вспомогательная переменная, счётчик
+    var j = 1 //очень вспомогательная переменная
+    val italics = mutableListOf(0)
+    val bold = mutableListOf(0)
+    val strikeThrough = mutableListOf(0)
+    txt.append("<html>", "<body>", "<p>")
+    for (line in text) {
+        if (line.isNotEmpty()) {
+            if (i == 1) {
+                txt.append("<p>")
+                i = 0
+            }
+            var lineEdit = line.replace("**", "<b>")
+            lineEdit = lineEdit.replace("~~", "<s>").replace("*", "<i>")
+            val table = Array(3) { ' ' }
+            val lineBuilder = StringBuilder()
+            lineBuilder.append(lineEdit)
+            for (charIndex in 0 until lineEdit.length - 2) {
+                table[0] = lineEdit[charIndex]
+                table[1] = lineEdit[charIndex + 1]
+                table[2] = lineEdit[charIndex + 2]
+                if (table[0] == '<' && table[2] == '>') {
+                    fun tagClose(tagName: MutableList<Int>) {
+                        if (tagName[0] == 0) {
+                            tagName[0]++
+                        } else {
+                            lineBuilder.insert(charIndex + j, '/')
+                            tagName[0]--
+                            j++
+                        }
+                    }
+                    when (table[1]) {
+                        'i' -> tagClose(italics)
+                        's' -> tagClose(strikeThrough)
+                        'b' -> tagClose(bold)
+                    }
+                }
+            }
+            j = 1
+            txt.append(lineBuilder)
+        } else {
+            txt.append("</p>")
+            i = 1
+        }
+    }
+    txt.append("</p>", "</body>", "</html>")
+    File(outputName).writeText(txt.toString())
 }
 
 /**
@@ -295,17 +420,17 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
  *
  * Пример входного файла:
 ///////////////////////////////начало файла/////////////////////////////////////////////////////////////////////////////
-* Утка по-пекински
+ * Утка по-пекински
     * Утка
     * Соус
-* Салат Оливье
+ * Салат Оливье
     1. Мясо
         * Или колбаса
     2. Майонез
     3. Картофель
     4. Что-то там ещё
-* Помидоры
-* Фрукты
+ * Помидоры
+ * Фрукты
     1. Бананы
     23. Яблоки
         1. Красные
@@ -316,52 +441,89 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
  * Соответствующий выходной файл:
 ///////////////////////////////начало файла/////////////////////////////////////////////////////////////////////////////
 <html>
-  <body>
-    <ul>
-      <li>
-        Утка по-пекински
-        <ul>
-          <li>Утка</li>
-          <li>Соус</li>
-        </ul>
-      </li>
-      <li>
-        Салат Оливье
-        <ol>
-          <li>Мясо
-            <ul>
-              <li>
-                  Или колбаса
-              </li>
-            </ul>
-          </li>
-          <li>Майонез</li>
-          <li>Картофель</li>
-          <li>Что-то там ещё</li>
-        </ol>
-      </li>
-      <li>Помидоры</li>
-      <li>
-        Фрукты
-        <ol>
-          <li>Бананы</li>
-          <li>
-            Яблоки
-            <ol>
-              <li>Красные</li>
-              <li>Зелёные</li>
-            </ol>
-          </li>
-        </ol>
-      </li>
-    </ul>
-  </body>
+<body>
+<ul>
+<li>
+Утка по-пекински
+<ul>
+<li>Утка</li>
+<li>Соус</li>
+</ul>
+</li>
+<li>
+Салат Оливье
+<ol>
+<li>Мясо
+<ul>
+<li>
+Или колбаса
+</li>
+</ul>
+</li>
+<li>Майонез</li>
+<li>Картофель</li>
+<li>Что-то там ещё</li>
+</ol>
+</li>
+<li>Помидоры</li>
+<li>
+Фрукты
+<ol>
+<li>Бананы</li>
+<li>
+Яблоки
+<ol>
+<li>Красные</li>
+<li>Зелёные</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+</body>
 </html>
 ///////////////////////////////конец файла//////////////////////////////////////////////////////////////////////////////
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlLists(inputName: String, outputName: String) {
-    TODO()
+    val text = File(inputName).readLines()
+    val txt = StringBuilder()
+    val lineGaps = MutableList(text.size) { 0 }
+    var gapLevels = 0
+
+    for (line in 0 until text.size) {
+        var lineEditor = text[line]
+        val lineBuilder = StringBuilder()
+        lineEditor.windowed(4) { if (it == "    ") lineGaps[line] += 4 }
+        lineBuilder.append(lineEditor)
+        for (char in lineEditor.indices) {
+            if (lineEditor[char].isLetter()) {
+                lineBuilder.insert(char, "<li>")
+                break
+            }
+        }
+        if (line > 0 && lineGaps[line] - lineGaps[line - 1] <= 0) txt.append("</li>")
+        if (line > 0 && lineGaps[line] - lineGaps[line - 1] < 0) lineBuilder.insert(0,"</li>")
+
+
+        if (line == text.size - 1) lineBuilder.append("</li>")
+
+        if (line == 0) {
+            if (text[line].trim()[0] == '*') txt.append(lineBuilder.toString().replace("*", "<ul>"))
+            else txt.append(lineBuilder.toString().replace("1.", "<ol>"))
+        } else {
+            lineEditor = lineBuilder.toString().replace("1.","<ol>").replace(Regex("""(\d\.)"""), "")
+                .trim().replace(Regex("[\\s\\t]"), "")
+            txt.append(lineEditor)
+            if (line == text.size - 1) txt.append("</li>")
+        }
+
+    }
+
+
+    txt.insert(0,"<html>" + "<body>")
+    txt.append("</body>", "</html>")
+    File(outputName).writeText(txt.toString())
 }
 
 /**
@@ -382,23 +544,23 @@ fun markdownToHtml(inputName: String, outputName: String) {
  * Вывести в выходной файл процесс умножения столбиком числа lhv (> 0) на число rhv (> 0).
  *
  * Пример (для lhv == 19935, rhv == 111):
-   19935
-*    111
+    19935
+ *    111
 --------
-   19935
-+ 19935
+    19935
++  19935
 +19935
 --------
  2212785
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  * Нули в множителе обрабатывать так же, как и остальные цифры:
-  235
-*  10
+235
+ *  10
 -----
-    0
+0
 +235
 -----
- 2350
+2350
  *
  */
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
@@ -412,13 +574,13 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  * Вывести в выходной файл процесс деления столбиком числа lhv (> 0) на число rhv (> 0).
  *
  * Пример (для lhv == 19935, rhv == 22):
-  19935 | 22
- -198     906
- ----
-    13
-    -0
-    --
-    135
+ 19935 | 22
+-198     906
+----
+   13
+   -0
+   --
+   135
    -132
    ----
       3
