@@ -177,21 +177,29 @@ fun alignFileByWidth(inputName: String, outputName: String) {
         val wordCount = line.split(" ")
         var minGapsSize: Int
         var residualGaps: Int
-        if (wordCount.size > 1) {
-            minGapsSize = lineDifference / (wordCount.size - 1)
-            residualGaps = lineDifference - (minGapsSize * (wordCount.size - 1))
-            for (word in 0 until wordCount.size - 1) {
-                if (residualGaps > 0) {
-                    txt.append(wordCount[word] + " ".repeat(minGapsSize + 2))
-                    residualGaps--
-                } else {
-                    txt.append(wordCount[word] + " ".repeat(minGapsSize + 1))
-                }
-            }
-            txt.append(wordCount.last() + "\n")
-        } else {
-            txt.append(wordCount[0] + "\n")
+
+        if (line.isEmpty() || line == "\n") {
+            txt.append("\n")
+            continue
         }
+
+        if (wordCount.size == 1) {
+            txt.append(wordCount[0]).append("\n")
+            continue
+        }
+
+        minGapsSize = lineDifference / (wordCount.size - 1)
+        residualGaps = lineDifference - (minGapsSize * (wordCount.size - 1))
+        for (word in 0 until wordCount.size - 1) {
+            if (residualGaps > 0) {
+                txt.append(wordCount[word] + " ".repeat(minGapsSize + 2))
+                residualGaps--
+            } else {
+                txt.append(wordCount[word] + " ".repeat(minGapsSize + 1))
+            }
+        }
+        txt.append(wordCount.last())
+        txt.append("\n")
     }
     File(outputName).writeText(txt.toString())
 }
@@ -376,7 +384,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             i = 1
         }
     }
-    if (text.isEmpty()) txt.append("<p>")
+    if (text.size == 1 && text[0].isEmpty()) txt.append("<p></p>")
     if (i == 0) txt.append("</p>")
     txt.append("</body>", "</html>")
     File(outputName).writeText(txt.toString())
