@@ -174,9 +174,15 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     }
     for (line in sortedLine) {
         val lineDifference = lineMaxSize - line.length
-        val wordCount = line.split(" ")
+        val words = line.split(" ")
+        val wordCount = words.toMutableList()
         var minGapsSize: Int
-        var residualGaps: Int
+        var residualGaps = 0
+
+        for (word in words) if (word == "") {
+            wordCount.remove(word)
+            residualGaps++
+        }
 
         if (line.isEmpty() || line == "\n") {
             txt.append("\n")
@@ -189,7 +195,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
         }
 
         minGapsSize = lineDifference / (wordCount.size - 1)
-        residualGaps = lineDifference - (minGapsSize * (wordCount.size - 1))
+        residualGaps += lineDifference - (minGapsSize * (wordCount.size - 1))
         for (word in 0 until wordCount.size - 1) {
             if (residualGaps > 0) {
                 txt.append(wordCount[word] + " ".repeat(minGapsSize + 2))
