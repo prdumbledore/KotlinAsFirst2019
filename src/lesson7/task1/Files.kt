@@ -4,7 +4,6 @@ package lesson7.task1
 
 import java.io.File
 import kotlin.math.max
-import kotlin.math.min
 
 /**
  * Пример
