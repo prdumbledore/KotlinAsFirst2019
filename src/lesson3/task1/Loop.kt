@@ -160,6 +160,7 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
     val m1 = sqrt(m.toDouble())
     val n1 = sqrt(n.toDouble())
     if (floor(n1) - floor(m1) >= 1) return true
+
     if ((m1 % 1.0 == 0.0) || (n1 % 1.0 == 0.0)) return true
     return false
 }

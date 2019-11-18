@@ -4,7 +4,6 @@ package lesson7.task1
 
 import java.io.File
 import kotlin.math.max
-import kotlin.math.min
 
 /**
  * Пример
@@ -136,9 +135,7 @@ fun centerFile(inputName: String, outputName: String) {
     }
     File(outputName).writeText(txt.toString())
 }
-// Почему, когда я добавляю line.trim() в список, и беру строки из списка, программа работает а если просто беру line.trim():
-// txt.append(" ".repeat(lineDifference) + line.trim() + "\n")
-// то программа не работает?
+
 
 /**
  * Сложная
@@ -181,22 +178,22 @@ fun alignFileByWidth(inputName: String, outputName: String) {
         val wordCount = line.split(" ")
         var minGapsSize: Int
         var residualGaps: Int
+
         if (wordCount.size > 1) {
             minGapsSize = lineDifference / (wordCount.size - 1)
             residualGaps = lineDifference - (minGapsSize * (wordCount.size - 1))
-        } else {
-            minGapsSize = -1
-            residualGaps = 0
-        }
-        for (word in 0 until wordCount.size - 1) {
-            if (residualGaps > 0) {
-                txt.append(wordCount[word] + " ".repeat(minGapsSize + 2))
-                residualGaps--
-            } else {
-                txt.append(wordCount[word] + " ".repeat(minGapsSize + 1))
+            for (word in 0 until wordCount.size) {
+                if (residualGaps > 0) {
+                    txt.append(wordCount[word] + " ".repeat(minGapsSize + 2))
+                    residualGaps--
+                } else {
+                    txt.append(wordCount[word] + " ".repeat(minGapsSize + 1))
+                }
             }
+        } else {
+            txt.append(line)
         }
-        txt.append(wordCount.last() + "\n")
+        txt.append("\n")
 
     }
     File(outputName).writeText(txt.toString())
@@ -377,7 +374,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             }
             j = 1
             txt.append(lineBuilder)
-        } else {
+        } else if (i == 0) {
             txt.append("</p>")
             i = 1
         }
@@ -421,20 +418,20 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
  * Пример входного файла:
 ///////////////////////////////начало файла/////////////////////////////////////////////////////////////////////////////
  * Утка по-пекински
-    * Утка
-    * Соус
+ * Утка
+ * Соус
  * Салат Оливье
-    1. Мясо
-        * Или колбаса
-    2. Майонез
-    3. Картофель
-    4. Что-то там ещё
+1. Мясо
+ * Или колбаса
+2. Майонез
+3. Картофель
+4. Что-то там ещё
  * Помидоры
  * Фрукты
-    1. Бананы
-    23. Яблоки
-        1. Красные
-        2. Зелёные
+1. Бананы
+23. Яблоки
+1. Красные
+2. Зелёные
 ///////////////////////////////конец файла//////////////////////////////////////////////////////////////////////////////
  *
  *
@@ -486,44 +483,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlLists(inputName: String, outputName: String) {
-    val text = File(inputName).readLines()
-    val txt = StringBuilder()
-    val lineGaps = MutableList(text.size) { 0 }
-    var gapLevels = 0
-
-    for (line in 0 until text.size) {
-        var lineEditor = text[line]
-        val lineBuilder = StringBuilder()
-        lineEditor.windowed(4) { if (it == "    ") lineGaps[line] += 4 }
-        lineBuilder.append(lineEditor)
-        for (char in lineEditor.indices) {
-            if (lineEditor[char].isLetter()) {
-                lineBuilder.insert(char, "<li>")
-                break
-            }
-        }
-        if (line > 0 && lineGaps[line] - lineGaps[line - 1] <= 0) txt.append("</li>")
-        if (line > 0 && lineGaps[line] - lineGaps[line - 1] < 0) lineBuilder.insert(0,"</li>")
-
-
-        if (line == text.size - 1) lineBuilder.append("</li>")
-
-        if (line == 0) {
-            if (text[line].trim()[0] == '*') txt.append(lineBuilder.toString().replace("*", "<ul>"))
-            else txt.append(lineBuilder.toString().replace("1.", "<ol>"))
-        } else {
-            lineEditor = lineBuilder.toString().replace("1.","<ol>").replace(Regex("""(\d\.)"""), "")
-                .trim().replace(Regex("[\\s\\t]"), "")
-            txt.append(lineEditor)
-            if (line == text.size - 1) txt.append("</li>")
-        }
-
-    }
-
-
-    txt.insert(0,"<html>" + "<body>")
-    txt.append("</body>", "</html>")
-    File(outputName).writeText(txt.toString())
+    TODO()
 }
 
 /**
@@ -544,14 +504,14 @@ fun markdownToHtml(inputName: String, outputName: String) {
  * Вывести в выходной файл процесс умножения столбиком числа lhv (> 0) на число rhv (> 0).
  *
  * Пример (для lhv == 19935, rhv == 111):
-    19935
+19935
  *    111
 --------
-    19935
+19935
 +  19935
 +19935
 --------
- 2212785
+2212785
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  * Нули в множителе обрабатывать так же, как и остальные цифры:
 235
@@ -574,16 +534,16 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  * Вывести в выходной файл процесс деления столбиком числа lhv (> 0) на число rhv (> 0).
  *
  * Пример (для lhv == 19935, rhv == 22):
- 19935 | 22
+19935 | 22
 -198     906
 ----
-   13
-   -0
-   --
-   135
-   -132
-   ----
-      3
+13
+-0
+--
+135
+-132
+----
+3
 
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  *
