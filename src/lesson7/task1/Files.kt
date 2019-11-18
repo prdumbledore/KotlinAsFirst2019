@@ -377,7 +377,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         }
     }
     if (text.isEmpty()) txt.append("<p>")
-    txt.append("</p>", "</body>", "</html>")
+    if (i == 0) txt.append("</p>")
+    txt.append("</body>", "</html>")
     File(outputName).writeText(txt.toString())
 }
 
