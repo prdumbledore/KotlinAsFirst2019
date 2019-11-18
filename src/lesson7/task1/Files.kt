@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import java.io.File
+import kotlin.math.max
 
 /**
  * Пример
@@ -53,8 +54,14 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Регистр букв игнорировать, то есть буквы е и Е считать одинаковыми.
  *
  */
-fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> = TODO()
-
+fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
+    val map = mutableMapOf<String, Int>()
+    val text = File(inputName).readText().toLowerCase()
+    for (word in substrings) {
+        map[word] = text.windowed(word.length) { if (it == word.toLowerCase()) 1 else 0 }.sum()
+    }
+    return map
+}
 
 /**
  * Средняя
@@ -70,7 +77,29 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    TODO()
+    val vowelLetters = mapOf(
+        'ы' to 'и',
+        'ю' to 'у',
+        'я' to 'а',
+        'Ы' to 'И',
+        'Ю' to 'У',
+        'Я' to 'А'
+    )
+    val consonantLetter = listOf('ж', 'ч', 'ш', 'щ')
+    val txt = StringBuilder()
+    val text = File(inputName).readLines()
+    for (line in text) {
+        txt.append(line[0].toString())
+        for (char in 1 until line.length) {
+            if (line[char - 1].toLowerCase() in consonantLetter && line[char].toLowerCase() in vowelLetters.keys) {
+                txt.append(vowelLetters[line[char]])
+            } else {
+                txt.append(line[char])
+            }
+        }
+        txt.append("\n")
+    }
+    File(outputName).writeText(txt.toString())
 }
 
 /**
@@ -91,7 +120,19 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val text = File(inputName).readLines()
+    val txt = StringBuilder()
+    val sortedLine = mutableListOf<String>()
+    var lineMaxSize = 0
+    for (line in text) {
+        sortedLine.add(line.trim())
+        lineMaxSize = max(lineMaxSize, line.trim().length)
+    }
+    for (line in sortedLine) {
+        val lineDifference = (lineMaxSize - line.length) / 2
+        txt.append(" ".repeat(lineDifference) + line + "\n")
+    }
+    File(outputName).writeText(txt.toString())
 }
 
 /**
@@ -122,8 +163,40 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    val text = File(inputName).readLines()
+    val txt = StringBuilder()
+    val sortedLine = mutableListOf<String>()
+    var lineMaxSize = 0
+    for (line in text) {
+        sortedLine.add(line.trim())
+        lineMaxSize = max(lineMaxSize, line.trim().length)
+    }
+    for (line in sortedLine) {
+        val lineDifference = lineMaxSize - line.length
+        val wordCount = line.split(" ")
+        var minGapsSize: Int
+        var residualGaps: Int
+        if (wordCount.size > 1) {
+            minGapsSize = lineDifference / (wordCount.size - 1)
+            residualGaps = lineDifference - (minGapsSize * (wordCount.size - 1))
+        } else {
+            minGapsSize = -1
+            residualGaps = 0
+        }
+        for (word in 0 until wordCount.size - 1) {
+            if (residualGaps > 0) {
+                txt.append(wordCount[word] + " ".repeat(minGapsSize + 2))
+                residualGaps--
+            } else {
+                txt.append(wordCount[word] + " ".repeat(minGapsSize + 1))
+            }
+        }
+        txt.append(wordCount.last() + "\n")
+
+    }
+    File(outputName).writeText(txt.toString())
 }
+
 
 /**
  * Средняя
@@ -257,9 +330,58 @@ Suspendisse ~~et elit in enim tempus iaculis~~.
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
-fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+fun markdownToHtmlSimple(inputName: String, outputName: String)  {
+    val text = File(inputName).readLines()
+    val txt = StringBuilder()
+    var i = 0 // вспомогательная переменная, счётчик
+    var j = 1 //очень вспомогательная переменная
+    val italics = mutableListOf(0)
+    val bold = mutableListOf(0)
+    val strikeThrough = mutableListOf(0)
+    txt.append("<html>", "<body>", "<p>")
+    for (line in text) {
+        if (i == 1) {
+            txt.append("<p>")
+            i = 0
+        }
+        if (line.isNotEmpty()) {
+            var lineEdit = line.replace("**", "<b>")
+            lineEdit = lineEdit.replace("~~", "<s>").replace("*", "<i>")
+            val table = Array(3) { ' ' }
+            val lineBuilder = StringBuilder()
+            lineBuilder.append(lineEdit)
+            for (charIndex in 0 until lineEdit.length - 2) {
+                table[0] = lineEdit[charIndex]
+                table[1] = lineEdit[charIndex + 1]
+                table[2] = lineEdit[charIndex + 2]
+                if (table[0] == '<' && table[2] == '>') {
+                    fun tagClose(tagName: MutableList<Int>) {
+                        if (tagName[0] == 0) {
+                            tagName[0]++
+                        } else {
+                            lineBuilder.insert(charIndex + j, '/')
+                            tagName[0]--
+                            j++
+                        }
+                    }
+                    when (table[1]) {
+                        'i' -> tagClose(italics)
+                        's' -> tagClose(strikeThrough)
+                        'b' -> tagClose(bold)
+                    }
+                }
+            }
+            j = 1
+            txt.append(lineBuilder)
+        } else if (i == 0) {
+            txt.append("</p>")
+            i = 1
+        }
+    }
+    txt.append("</p>", "</body>", "</html>")
+    File(outputName).writeText(txt.toString())
 }
+
 
 /**
  * Сложная
