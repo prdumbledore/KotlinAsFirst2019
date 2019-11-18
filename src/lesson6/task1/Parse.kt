@@ -5,7 +5,7 @@ package lesson6.task1
 import lesson2.task2.daysInMonth
 
 /**
- * Пример
+ * Пример//
  *
  * Время представлено строкой вида "11:34:45", содержащей часы, минуты и секунды, разделённые двоеточием.
  * Разобрать эту строку и рассчитать количество секунд, прошедшее с начала дня.
@@ -59,18 +59,6 @@ fun main() {
     }
 }
 
-
-/**
- * Средняя
- *
- * Дата представлена строкой вида "15 июля 2016".
- * Перевести её в цифровой формат "15.07.2016".
- * День и месяц всегда представлять двумя цифрами, например: 03.04.2011.
- * При неверном формате входной строки вернуть пустую строку.
- *
- * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
- * входными данными.
- */
 val list = listOf(
     "января",
     "февраля",
@@ -86,6 +74,17 @@ val list = listOf(
     "декабря"
 )
 
+/**
+ * Средняя
+ *
+ * Дата представлена строкой вида "15 июля 2016".
+ * Перевести её в цифровой формат "15.07.2016".
+ * День и месяц всегда представлять двумя цифрами, например: 03.04.2011.
+ * При неверном формате входной строки вернуть пустую строку.
+ *
+ * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
+ * входными данными.
+ */
 fun dateStrToDigit(str: String): String {
     val list1 = str.split(" ")
     try {
@@ -99,7 +98,10 @@ fun dateStrToDigit(str: String): String {
         return if (day !in 1..daysInMonth(month, year)) ""
         else return String.format("%02d.%02d.%d", day, month, year)
 
-    } catch (e: Exception) {
+    } catch (e: IndexOutOfBoundsException) {
+        return ""
+    }
+    catch (e: NumberFormatException) {
         return ""
     }
 }
@@ -173,7 +175,7 @@ fun bestLongJump(jumps: String): Int {
 }
 
 /**
- * Сложная//
+ * Сложная
  *
  * Результаты спортсмена на соревнованиях в прыжках в высоту представлены строкой вида
  * "220 + 224 %+ 228 %- 230 + 232 %%- 234 %".
@@ -190,7 +192,7 @@ fun bestHighJump(jumps: String): Int {
     return if (match && "+" in jumps) {
 
         val list = jumps.split(" ")
-        for (i in list.indices step 2) {
+        for (i in 0 until list.size step 2) {
             if ("+" in list[i + 1] && list[i].toInt() > max) max = list[i].toInt()
         }
 
@@ -262,7 +264,7 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть больше либо равны нуля.
  */
 fun mostExpensive(description: String): String {
-    val match = Regex("""([А-ЯЁёа-я]+\s(\d+.\d+|\d+);?\s?)+""").matches(description)
+    val match = Regex("""(\S+\s(\d+.\d+|\d+);?\s?)+""").matches(description)
     var num = -1.0
     var str = ""
     if (match && description.isNotEmpty()) {
@@ -340,6 +342,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             '[' -> it++
             ']' -> it--
         }
+        require(it >= 0)
     }
     require(it == 0)
 
@@ -367,7 +370,6 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         return com
     }
 
-
     while (com < commands.length && counter > 0) {
         check(position in 0 until cells)
         when (commands[com]) {
@@ -385,7 +387,9 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         com++
         counter--
     }
-
-
+    check(position in 0 until cells)
     return res
 }
+
+
+
