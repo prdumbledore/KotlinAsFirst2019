@@ -135,9 +135,6 @@ fun centerFile(inputName: String, outputName: String) {
     }
     File(outputName).writeText(txt.toString())
 }
-// Почему, когда я добавляю line.trim() в список, и беру строки из списка, программа работает а если просто беру line.trim():
-// txt.append(" ".repeat(lineDifference) + line.trim() + "\n")
-// то программа не работает?
 
 /**
  * Сложная
@@ -172,7 +169,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     val sortedLine = mutableListOf<String>()
     var lineMaxSize = 0
     for (line in text) {
-        if (line.trim().isNotEmpty()) sortedLine.add(line.trim())
+        sortedLine.add(line.trim())
         lineMaxSize = max(lineMaxSize, line.trim().length)
     }
     for (line in sortedLine) {
@@ -183,20 +180,18 @@ fun alignFileByWidth(inputName: String, outputName: String) {
         if (wordCount.size > 1) {
             minGapsSize = lineDifference / (wordCount.size - 1)
             residualGaps = lineDifference - (minGapsSize * (wordCount.size - 1))
-        } else {
-            minGapsSize = -1
-            residualGaps = 0
-        }
-        for (word in 0 until wordCount.size - 1) {
-            if (residualGaps > 0) {
-                txt.append(wordCount[word] + " ".repeat(minGapsSize + 2))
-                residualGaps--
-            } else {
-                txt.append(wordCount[word] + " ".repeat(minGapsSize + 1))
+            for (word in 0 until wordCount.size - 1) {
+                if (residualGaps > 0) {
+                    txt.append(wordCount[word] + " ".repeat(minGapsSize + 2))
+                    residualGaps--
+                } else {
+                    txt.append(wordCount[word] + " ".repeat(minGapsSize + 1))
+                }
             }
+            txt.append(wordCount.last() + "\n")
+        } else {
+            txt.append(wordCount[0] + "\n")
         }
-        txt.append(wordCount.last() + "\n")
-
     }
     File(outputName).writeText(txt.toString())
 }
@@ -381,6 +376,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             i = 1
         }
     }
+    if (text.isEmpty()) txt.append("<p>")
     txt.append("</p>", "</body>", "</html>")
     File(outputName).writeText(txt.toString())
 }
