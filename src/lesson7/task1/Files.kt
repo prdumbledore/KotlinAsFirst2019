@@ -4,6 +4,7 @@ package lesson7.task1
 
 import java.io.File
 import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Пример
@@ -135,7 +136,9 @@ fun centerFile(inputName: String, outputName: String) {
     }
     File(outputName).writeText(txt.toString())
 }
-
+// Почему, когда я добавляю line.trim() в список, и беру строки из списка, программа работает а если просто беру line.trim():
+// txt.append(" ".repeat(lineDifference) + line.trim() + "\n")
+// то программа не работает?
 
 /**
  * Сложная
@@ -154,7 +157,7 @@ fun centerFile(inputName: String, outputName: String) {
  * 4) Число строк в выходном файле должно быть равно числу строк во входном (в т. ч. пустых).
  *
  * Равномерность определяется следующими формальными правилами:
- *0 5) Число пробелов между каждыми двумя парами соседних слов не должно отличаться более, чем на 1.
+ * 5) Число пробелов между каждыми двумя парами соседних слов не должно отличаться более, чем на 1.
  * 6) Число пробелов между более левой парой соседних слов должно быть больше или равно числу пробелов
  *    между более правой парой соседних слов.
  *
@@ -170,7 +173,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     val sortedLine = mutableListOf<String>()
     var lineMaxSize = 0
     for (line in text) {
-        sortedLine.add(line.trim())
+        if (line.trim().isNotEmpty()) sortedLine.add(line.trim())
         lineMaxSize = max(lineMaxSize, line.trim().length)
     }
     for (line in sortedLine) {
@@ -178,22 +181,22 @@ fun alignFileByWidth(inputName: String, outputName: String) {
         val wordCount = line.split(" ")
         var minGapsSize: Int
         var residualGaps: Int
-
         if (wordCount.size > 1) {
             minGapsSize = lineDifference / (wordCount.size - 1)
             residualGaps = lineDifference - (minGapsSize * (wordCount.size - 1))
-            for (word in 0 until wordCount.size) {
-                if (residualGaps > 0) {
-                    txt.append(wordCount[word] + " ".repeat(minGapsSize + 2))
-                    residualGaps--
-                } else {
-                    txt.append(wordCount[word] + " ".repeat(minGapsSize + 1))
-                }
-            }
         } else {
-            txt.append(line)
+            minGapsSize = -1
+            residualGaps = 0
         }
-        txt.append("\n")
+        for (word in 0 until wordCount.size - 1) {
+            if (residualGaps > 0) {
+                txt.append(wordCount[word] + " ".repeat(minGapsSize + 2))
+                residualGaps--
+            } else {
+                txt.append(wordCount[word] + " ".repeat(minGapsSize + 1))
+            }
+        }
+        txt.append(wordCount.last() + "\n")
 
     }
     File(outputName).writeText(txt.toString())
@@ -334,12 +337,12 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val text = File(inputName).readLines()
     val txt = StringBuilder()
-    var i = 0 // вспомогательная переменная, счётчик
+    var i = 1 // вспомогательная переменная, счётчик
     var j = 1 //очень вспомогательная переменная
     val italics = mutableListOf(0)
     val bold = mutableListOf(0)
     val strikeThrough = mutableListOf(0)
-    txt.append("<html>", "<body>", "<p>")
+    txt.append("<html>", "<body>")
     for (line in text) {
         if (line.isNotEmpty()) {
             if (i == 1) {
