@@ -199,6 +199,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
 
 
 /**
+ *
  * Средняя
  *
  * Во входном файле с именем inputName содержится некоторый текст (в том числе, и на русском языке).
