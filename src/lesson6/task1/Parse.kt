@@ -88,6 +88,7 @@ val list = listOf(
 fun dateStrToDigit(str: String): String {
     val list1 = str.split(" ")
     try {
+        if (list1.size != 3) return ""
         val day = list1[0].toInt()
         val month: Int
         val year = list1[2].toInt()

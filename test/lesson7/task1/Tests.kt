@@ -104,7 +104,14 @@ Basic, Ruby, Swift.
         centerFile("input/center_in1.txt", "temp.txt")
         assertFileContent(
             "temp.txt",
-            """"""
+            """              Съешь же ещё этих мягких французских булок, да выпей чаю.
+Широкая электрификация южных губерний даст мощный толчок подъёму сельского хозяйства.
+                                        Тест
+                                          """ +  // Avoiding trailing whitespaces problem
+                    """
+                                     Hello World
+           Во входном файле с именем inputName содержится некоторый текст.
+        Вывести его в выходной файл с именем outputName, выровняв по центру."""
         )
         File("temp.txt").delete()
 
@@ -216,13 +223,8 @@ Basic, Ruby, Swift.
             """
                     <html>
                         <body>
-                            <p>
-                                Lorem ipsum <i>dolor sit amet</i>, consectetur <b>adipiscing</b> elit.
-                                Vestibulum lobortis. <s>Est vehicula rutrum <i>suscipit</i></s>, ipsum <s>lib</s>ero <i>placerat <b>tortor</b></i>.
-                            </p>
-                            <p>
-                                Suspendisse <s>et elit in enim tempus iaculis</s>.
-                            </p>
+                        <p>
+                        </p>
                         </body>
                     </html>
                     """.trimIndent().replace(Regex("[\\s\\n\\t]"), "")
@@ -234,7 +236,7 @@ Basic, Ruby, Swift.
     @Test
     @Tag("Hard")
     fun markdownToHtmlSimple() {
-        markdownToHtmlSimple("input/markdown_simple.md", "temp.html")
+        markdownToHtmlSimple("input/markdown_lists.md", "temp.html")
         checkHtmlSimpleExample()
     }
 
