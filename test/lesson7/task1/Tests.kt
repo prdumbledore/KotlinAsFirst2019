@@ -223,8 +223,13 @@ Basic, Ruby, Swift.
             """
                     <html>
                         <body>
-                        <p>
-                        </p>
+                            <p>
+                                Lorem ipsum <i>dolor sit amet</i>, consectetur <b>adipiscing</b> elit.
+                                Vestibulum lobortis. <s>Est vehicula rutrum <i>suscipit</i></s>, ipsum <s>lib</s>ero <i>placerat <b>tortor</b></i>.
+                            </p>
+                            <p>
+                                Suspendisse <s>et elit in enim tempus iaculis</s>.
+                            </p>
                         </body>
                     </html>
                     """.trimIndent().replace(Regex("[\\s\\n\\t]"), "")
