@@ -98,10 +98,7 @@ fun dateStrToDigit(str: String): String {
         return if (day !in 1..daysInMonth(month, year)) ""
         else return String.format("%02d.%02d.%d", day, month, year)
 
-    } catch (e: IndexOutOfBoundsException) {
-        return ""
-    }
-    catch (e: NumberFormatException) {
+    } catch (e: NumberFormatException) {
         return ""
     }
 }

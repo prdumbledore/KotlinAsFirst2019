@@ -283,7 +283,8 @@ fun hasAnagrams(words: List<String>): Boolean {
     if (words.isEmpty()) return false
     val map = mutableMapOf<String, Int>()
     for (word in words) {
-        map[word.toCharArray().sorted().toString()] = map.getOrDefault(word.toCharArray().sorted().toString(), 0) + 1
+        val letters = word.toCharArray().sorted().toString()
+        map[letters] = map.getOrDefault(letters, 0) + 1
     }
     for ((key) in map) {
         if (map.getValue(key) > 1) return true
@@ -440,22 +441,22 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         for (j in 1 until capacity + 1) {
             if (weight <= j) {
                 if (table[i - 1][j].isNotEmpty()) {
-                    for ((Item) in bagPack) {
-                        for (ItemName in Item) {
-                            if (ItemName !in setPriceInTopCell) {
-                                setPriceInTopCell += ItemName
-                                if (ItemName in table[i - 1][j]) priceInTopCell += bagPack.getValue(Item).second
+                    for ((item) in bagPack) {
+                        for (itemName in item) {
+                            if (itemName !in setPriceInTopCell) {
+                                setPriceInTopCell += itemName
+                                if (itemName in table[i - 1][j]) priceInTopCell += bagPack.getValue(item).second
                             }
                         }
                     }
                 }
                 if (table[i - 1][j - weight].isNotEmpty()) {
-                    for ((Item) in bagPack) {
-                        for (ItemName in Item) {
-                            if (ItemName !in setPriceInTopAndMinWeightCell) {
-                                setPriceInTopAndMinWeightCell += ItemName
-                                if (ItemName in table[i - 1][j - weight])
-                                    priceInTopAndMinWeightCell += bagPack.getValue(Item).second
+                    for ((item) in bagPack) {
+                        for (itemName in item) {
+                            if (itemName !in setPriceInTopAndMinWeightCell) {
+                                setPriceInTopAndMinWeightCell += itemName
+                                if (itemName in table[i - 1][j - weight])
+                                    priceInTopAndMinWeightCell += bagPack.getValue(item).second
                             }
                         }
                     }

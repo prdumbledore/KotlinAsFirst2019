@@ -77,16 +77,18 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  * Исключения (жюри, брошюра, парашют) в рамках данного задания обрабатывать не нужно
  *
  */
+
+val vowelLetters = mapOf(
+    'ы' to 'и',
+    'ю' to 'у',
+    'я' to 'а',
+    'Ы' to 'И',
+    'Ю' to 'У',
+    'Я' to 'А'
+)
+val consonantLetter = listOf('ж', 'ч', 'ш', 'щ')
+
 fun sibilants(inputName: String, outputName: String) {
-    val vowelLetters = mapOf(
-        'ы' to 'и',
-        'ю' to 'у',
-        'я' to 'а',
-        'Ы' to 'И',
-        'Ю' to 'У',
-        'Я' to 'А'
-    )
-    val consonantLetter = listOf('ж', 'ч', 'ш', 'щ')
     val txt = StringBuilder()
     val text = File(inputName).readLines()
     for (line in text) {
@@ -339,17 +341,17 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val text = File(inputName).readLines()
     val txt = StringBuilder()
-    var i = 1 // вспомогательная переменная, счётчик
-    var j = 1 //очень вспомогательная переменная
+    var paragraphClosed = 1
+    var j = 1 // вспомогательная переменная, счётчик
     val italics = mutableListOf(0)
     val bold = mutableListOf(0)
     val strikeThrough = mutableListOf(0)
     txt.append("<html>", "<body>")
     for (line in text) {
         if (line.isNotEmpty()) {
-            if (i == 1) {
+            if (paragraphClosed == 1) {
                 txt.append("<p>")
-                i = 0
+                paragraphClosed = 0
             }
             var lineEdit = line.replace("**", "<b>")
             lineEdit = lineEdit.replace("~~", "<s>").replace("*", "<i>")
@@ -379,13 +381,13 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             }
             j = 1
             txt.append(lineBuilder)
-        } else if (i == 0) {
+        } else if (paragraphClosed == 0) {
             txt.append("</p>")
-            i = 1
+            paragraphClosed = 1
         }
     }
     if (text.isEmpty() || (text.size == 1 && text[0].isEmpty())) txt.append("<p></p>")
-    if (i == 0) txt.append("</p>")
+    if (paragraphClosed == 0) txt.append("</p>")
     txt.append("</body>", "</html>")
     File(outputName).writeText(txt.toString())
 }
