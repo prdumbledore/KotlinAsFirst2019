@@ -241,7 +241,7 @@ Basic, Ruby, Swift.
     @Test
     @Tag("Hard")
     fun markdownToHtmlSimple() {
-        markdownToHtmlSimple("input/markdown_lists.md", "temp.html")
+        markdownToHtmlSimple("input/markdown_simple.md", "temp.html")
         checkHtmlSimpleExample()
     }
 
