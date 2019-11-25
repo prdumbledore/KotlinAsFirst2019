@@ -115,6 +115,7 @@ class Tests {
         assertEquals(0.0, Circle(Point(0.0, 0.0), 1.0).distance(Circle(Point(0.0, 2.0), 1.0)), 1e-5)
         assertEquals(1.0, Circle(Point(0.0, 0.0), 1.0).distance(Circle(Point(-4.0, 0.0), 2.0)), 1e-5)
         assertEquals(2.0 * sqrt(2.0) - 2.0, Circle(Point(0.0, 0.0), 1.0).distance(Circle(Point(2.0, 2.0), 1.0)), 1e-5)
+        assertEquals(0.0, Circle(Point(3.0, 0.0), 5.0).distance(Circle(Point(0.0, 7.0), 3.0)), 1e-5)
     }
 
     @Test
