@@ -87,7 +87,7 @@ data class Circle(val center: Point, val radius: Double) {
      *
      * Вернуть true, если и только если окружность содержит данную точку НА себе или ВНУТРИ себя
      */
-    fun contains(p: Point): Boolean = pointInsideCircle(p.x, p.y, center.x, center.y, radius)
+    fun contains(p: Point): Boolean = center.distance(p) - radius <= 1e-6
 }
 
 /**
@@ -242,7 +242,10 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
  * (построить окружность по трём точкам, или
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
-fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = TODO()
+fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
+    val p = bisectorByPoints(a, b).crossPoint(bisectorByPoints(a, c))
+    return Circle(p, p.distance(a))
+}
 
 /**
  * Очень сложная
