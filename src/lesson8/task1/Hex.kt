@@ -87,6 +87,7 @@ class HexSegment(val begin: HexPoint, val end: HexPoint) {
      * А, например, 13-26 не является "правильным" отрезком.
      */
     fun isValid(): Boolean = when {
+        begin == end -> false
         begin.y == end.y -> true
         begin.x == end.x -> true
         begin.x + begin.y == end.x + end.y -> true
@@ -136,7 +137,7 @@ enum class Direction {
      * Вернуть направление, противоположное данному.
      * Для INCORRECT вернуть INCORRECT
      */
-    fun opposite(): Direction = when (values()[ordinal]) {
+    fun opposite(): Direction = when (this) {
         RIGHT -> LEFT
         LEFT -> RIGHT
         UP_RIGHT -> DOWN_LEFT
@@ -158,7 +159,7 @@ enum class Direction {
      * При решении этой задачи попробуйте обойтись без перечисления всех семи вариантов.
      */
     fun next(): Direction {
-        require(values()[ordinal] != INCORRECT)
+        require(this != INCORRECT)
         return values()[(ordinal + 1) % 6]
     }
 
@@ -168,7 +169,7 @@ enum class Direction {
      * Вернуть true, если данное направление совпадает с other или противоположно ему.
      * INCORRECT не параллельно никакому направлению, в том числе другому INCORRECT.
      */
-    fun isParallel(other: Direction): Boolean = if (values()[ordinal] == INCORRECT) false
+    fun isParallel(other: Direction): Boolean = if (this == INCORRECT) false
     else (ordinal == other.ordinal || ordinal == other.opposite().ordinal)
 }
 

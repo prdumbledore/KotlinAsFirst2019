@@ -2,6 +2,8 @@
 
 package lesson8.task2
 
+import lesson8.task3.Graph
+import java.util.*
 import kotlin.math.abs
 
 /**
@@ -221,7 +223,63 @@ fun kingMoveNumber(start: Square, end: Square): Int {
  *          kingTrajectory(Square(3, 5), Square(6, 2)) = listOf(Square(3, 5), Square(4, 4), Square(5, 3), Square(6, 2))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun kingTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun kingTrajectory(start: Square, end: Square): List<Square> {
+    require(start.inside() && end.inside())
+    val squareList = mutableListOf(start)
+    return when (kingMoveNumber(start, end)) {
+        -1 -> emptyList()
+        0 -> listOf(start)
+        1 -> listOf(start, end)
+        else -> {
+            var columnDifference = start.column - end.column
+            var rowDifference = start.row - end.row
+            var x = start.column
+            var y = start.row
+
+            while (columnDifference != 0 && rowDifference != 0) {
+                if (columnDifference > 0) {
+                    columnDifference--
+                    x--
+                } else {
+                    columnDifference++
+                    x++
+                }
+                if (rowDifference > 0) {
+                    rowDifference--
+                    y--
+                } else {
+                    rowDifference++
+                    y++
+                }
+                squareList.add(Square(x, y))
+            }
+
+            while (columnDifference != 0 || rowDifference != 0) {
+                if (columnDifference == 0 && rowDifference != 0) {
+                    if (rowDifference > 0) {
+                        rowDifference--
+                        y--
+                    } else {
+                        rowDifference++
+                        y++
+                    }
+                }
+                if (columnDifference != 0 && rowDifference == 0) {
+                    if (columnDifference > 0) {
+                        columnDifference--
+                        x--
+                    } else {
+                        columnDifference++
+                        x++
+                    }
+                }
+                squareList.add(Square(x, y))
+            }
+
+            squareList
+        }
+    }
+}
 
 /**
  * Сложная
@@ -246,7 +304,10 @@ fun kingTrajectory(start: Square, end: Square): List<Square> = TODO()
  * Пример: knightMoveNumber(Square(3, 1), Square(6, 3)) = 3.
  * Конь может последовательно пройти через клетки (5, 2) и (4, 4) к клетке (6, 3).
  */
-fun knightMoveNumber(start: Square, end: Square): Int = TODO()
+fun knightMoveNumber(start: Square, end: Square): Int {
+    require(start.inside() && end.inside())
+    return knightTrajectory(start, end).size - 1
+}
 
 /**
  * Очень сложная
@@ -268,4 +329,53 @@ fun knightMoveNumber(start: Square, end: Square): Int = TODO()
  *
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun knightTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun knightTrajectory(start: Square, end: Square): List<Square> {
+    require(start.inside() && end.inside())
+    if (start == end) return listOf(start)
+
+    val graph = Graph()
+    for (i in 1..8) {
+        for (j in 1..8) {
+            graph.addVertex(Square(i, j).notation())
+        }
+    }
+    val moves =
+        listOf(Pair(1, 2), Pair(2, 1), Pair(-1, -2), Pair(-2, -1), Pair(-1, 2), Pair(1, -2), Pair(2, -1), Pair(-2, 1))
+    for (column in 1..8) {
+        for (row in 1..8) {
+            for (pair in moves) {
+                val nextStep = Square(column + pair.first, row + pair.second)
+                if (nextStep.inside()) {
+                    graph.connect(Square(column, row).notation(), nextStep.notation())
+                }
+            }
+        }
+    }
+
+    fun bfs(start: Graph.Vertex, finish: Graph.Vertex): List<Square> {
+        val queue = ArrayDeque<Graph.Vertex>()
+        queue.add(start)
+        val visited = mutableMapOf(start to emptyList<Square>())
+        while (queue.isNotEmpty()) {
+            val next = queue.poll()
+            val distance = visited[next]!!
+            if (next == finish) {
+                return distance
+            }
+            for (neighbor in next.neighbors) {
+                if (neighbor in visited) continue
+                visited[neighbor] = distance + square(neighbor.name)
+                queue.add(neighbor)
+            }
+        }
+        return emptyList()
+    }
+
+    val res = mutableListOf(start)
+    res += bfs(graph[start.notation()], graph[end.notation()])
+    return res
+}
+
+
+
+

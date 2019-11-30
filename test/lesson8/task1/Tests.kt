@@ -184,6 +184,7 @@ class Tests {
     fun lineByPoint() {
         assertApproxEquals(Line(Point(0.0, 0.0), PI / 2), lineByPoints(Point(0.0, 0.0), Point(0.0, 2.0)))
         assertApproxEquals(Line(Point(1.0, 1.0), PI / 4), lineByPoints(Point(1.0, 1.0), Point(3.0, 3.0)))
+        assertApproxEquals(Line(Point(-6.0, -6.0), PI / 4), lineByPoints(Point(-6.0, -6.0), Point(3.0, 3.0)))
     }
 
     @Test

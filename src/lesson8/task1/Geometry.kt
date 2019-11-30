@@ -3,7 +3,6 @@
 package lesson8.task1
 
 import lesson1.task1.sqr
-import lesson2.task2.pointInsideCircle
 import kotlin.math.*
 
 /**
@@ -159,11 +158,9 @@ class Line private constructor(val b: Double, val angle: Double) {
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
     fun crossPoint(other: Line): Point {
-        // какая-то странная у вас формула, я не придумал другого решения кроме как поставить костыль на случай если угол 90 градусов
         val x =
             (other.b * cos(angle) - b * cos(other.angle)) / (sin(angle) * cos(other.angle) - cos(angle) * sin(other.angle))
-        val y: Double
-        y = if (angle == Math.PI / 2) (x * sin(other.angle) + other.b) / cos(other.angle)
+        val y = if (angle == Math.PI / 2) (x * sin(other.angle) + other.b) / cos(other.angle)
         else (x * sin(angle) + b) / cos(angle)
         return Point(x, y)
     }
@@ -194,9 +191,9 @@ fun lineBySegment(s: Segment): Line = lineByPoints(s.begin, s.end)
 fun lineByPoints(a: Point, b: Point): Line {
     if (a.x == b.x) return Line(a, Math.PI / 2)
     if (a.y == b.y) return Line(a, 0.0)
-    val k = (b.y - a.y) / (b.x - a.x)
-    return if (k > 0) Line(a, atan(k))
-    else Line(a, (2 * PI - atan(-k)) % PI)
+    val arcTan = atan2(a.x, a.y)
+    return if (arcTan > 0) Line(a, arcTan % PI)
+    else Line(a, arcTan + PI)
 }
 
 /**

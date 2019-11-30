@@ -177,8 +177,6 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     for (line in sortedLine) {
         val lineDifference = lineMaxSize - line.length
         val wordCount = line.split(" ")
-        var minGapsSize: Int
-        var residualGaps: Int
 
         if (line.isEmpty() || line == "\n") {
             txt.append("\n")
@@ -190,8 +188,8 @@ fun alignFileByWidth(inputName: String, outputName: String) {
             continue
         }
 
-        minGapsSize = lineDifference / (wordCount.size - 1)
-        residualGaps = lineDifference - (minGapsSize * (wordCount.size - 1))
+        val minGapsSize = lineDifference / (wordCount.size - 1)
+        var residualGaps = lineDifference - (minGapsSize * (wordCount.size - 1))
         for (word in 0 until wordCount.size - 1) {
             if (residualGaps > 0) {
                 txt.append(wordCount[word] + " ".repeat(minGapsSize + 2))
@@ -341,7 +339,7 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val text = File(inputName).readLines()
     val txt = StringBuilder()
-    var paragraphClosed = 1
+    var paragraphClosed = true
     var j = 1 // вспомогательная переменная, счётчик
     val italics = mutableListOf(0)
     val bold = mutableListOf(0)
@@ -349,9 +347,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     txt.append("<html>", "<body>")
     for (line in text) {
         if (line.isNotEmpty()) {
-            if (paragraphClosed == 1) {
+            if (paragraphClosed) {
                 txt.append("<p>")
-                paragraphClosed = 0
+                paragraphClosed = false
             }
             var lineEdit = line.replace("**", "<b>")
             lineEdit = lineEdit.replace("~~", "<s>").replace("*", "<i>")
@@ -381,13 +379,13 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             }
             j = 1
             txt.append(lineBuilder)
-        } else if (paragraphClosed == 0) {
+        } else if (!paragraphClosed) {
             txt.append("</p>")
-            paragraphClosed = 1
+            paragraphClosed = true
         }
     }
     if (text.isEmpty() || (text.size == 1 && text[0].isEmpty())) txt.append("<p></p>")
-    if (paragraphClosed == 0) txt.append("</p>")
+    if (!paragraphClosed) txt.append("</p>")
     txt.append("</body>", "</html>")
     File(outputName).writeText(txt.toString())
 }
