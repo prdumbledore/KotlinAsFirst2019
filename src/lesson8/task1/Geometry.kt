@@ -192,9 +192,9 @@ fun lineByPoints(a: Point, b: Point): Line {
     if (a.x == b.x) return Line(a, Math.PI / 2)
     if (a.y == b.y) return Line(a, 0.0)
     val angle = atan2(b.y - a.y, b.x - a.x)
-    if (angle == PI) return Line(a, 0.0)
-    return if (angle >= 0) Line(a, angle)
-    else Line(a, PI + angle)
+    if (angle == PI || angle <= 1e-6 && angle >= -1e-6) return Line(a, 0.0)
+    return if (angle < 0) Line(a, PI + angle)
+    else Line(a, angle)
 }
 
 /**
