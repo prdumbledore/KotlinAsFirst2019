@@ -191,9 +191,9 @@ fun lineBySegment(s: Segment): Line = lineByPoints(s.begin, s.end)
 fun lineByPoints(a: Point, b: Point): Line {
     if (a.x == b.x) return Line(a, Math.PI / 2)
     if (a.y == b.y) return Line(a, 0.0)
-    val arcTan = atan2(a.x, a.y)
-    return if (arcTan > 0) Line(a, arcTan % PI)
-    else Line(a, arcTan + PI)
+    val angle = atan2(b.y - a.y, b.x - a.x)
+    return if (angle > 0) Line(a, angle)
+    else Line(a, PI + angle)
 }
 
 /**
