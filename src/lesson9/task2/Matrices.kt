@@ -60,7 +60,36 @@ operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> {
  * 10 11 12  5
  *  9  8  7  6
  */
-fun generateSpiral(height: Int, width: Int): Matrix<Int> = TODO()
+fun generateSpiral(height: Int, width: Int): Matrix<Int> {
+    val result = createMatrix(height, width, 0)
+    var row = 0
+    var column = 0
+    var i = 1
+    result[0, 0] = 1
+    while (i < width * height) {
+        while (column != width - 1 && result[row, column + 1] == 0) {
+            i++
+            column++
+            result[row, column] = i
+        }
+        while (row != height - 1 && result[row + 1, column] == 0) {
+            i++
+            row++
+            result[row, column] = i
+        }
+        while (column != 0 && result[row, column - 1] == 0) {
+            i++
+            column--
+            result[row, column] = i
+        }
+        while (row != 0 && result[row - 1, column] == 0) {
+            i++
+            row--
+            result[row, column] = i
+        }
+    }
+    return result
+}
 
 /**
  * Сложная
@@ -76,7 +105,44 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> = TODO()
  *  1  2  2  2  2  1
  *  1  1  1  1  1  1
  */
-fun generateRectangles(height: Int, width: Int): Matrix<Int> = TODO()
+fun generateRectangles(height: Int, width: Int): Matrix<Int> {
+    var result = createMatrix(height, width, 1)
+    var row = 1
+    var column = 1
+    var i = 1
+    if (height < 3 && height < 3) return createMatrix(height, width, 1)
+
+    while (row <= height / 2 && column <= width / 2) {
+        i++
+        result = generateRectangle(i, row, column, result)
+        row++
+        column++
+    }
+
+    return result
+}
+
+fun generateRectangle(i: Int, height: Int, width: Int, result: Matrix<Int>): Matrix<Int> {
+    var row = height
+    var column = width
+    while (column != result.width - 2 && result[row, column + 1] == 1) {
+        column++
+        result[row, column] = i
+    }
+    while (row != result.height - 2 && result[row + 1, column] == 1) {
+        row++
+        result[row, column] = i
+    }
+    while (column != 1 && result[row, column - 1] == 1) {
+        column--
+        result[row, column] = i
+    }
+    while (row != 1 && result[row - 1, column] == 1) {
+        row--
+        result[row, column] = i
+    }
+    return result
+}
 
 /**
  * Сложная
