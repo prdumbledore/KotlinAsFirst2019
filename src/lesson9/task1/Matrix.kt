@@ -81,7 +81,7 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : M
             sb.append("[")
             for (column in 0 until width) {
                 sb.append(this[row, column])
-                if (row != width && column != height) sb.append(", ")
+                if (row != width - 1 && column != height - 1) sb.append(", ")
             }
             sb.append("]")
         }
