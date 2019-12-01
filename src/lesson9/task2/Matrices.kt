@@ -130,6 +130,7 @@ fun generateRectangles(height: Int, width: Int): Matrix<Int> {
 fun generateRectangle(i: Int, height: Int, width: Int, result: Matrix<Int>): Matrix<Int> {
     var row = height
     var column = width
+    result[height, width] = i
     while (column != result.width - 2 && result[row, column + 1] == 1) {
         column++
         result[row, column] = i
