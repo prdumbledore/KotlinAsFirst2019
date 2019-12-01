@@ -75,13 +75,13 @@ class Tests {
         assertEquals(createMatrix(1, 1, listOf(listOf(1))), generateRectangles(1, 1))
         assertEquals(
             createMatrix(
-                3, 2,
+                3, 3,
                 listOf(
-                    listOf(1, 1),
-                    listOf(1, 1),
-                    listOf(1, 1)
+                    listOf(1, 1, 1),
+                    listOf(1, 1, 1),
+                    listOf(1, 1, 1)
                 )
-            ), generateRectangles(3, 2)
+            ), generateRectangles(3, 3)
         )
         assertEquals(
             createMatrix(
