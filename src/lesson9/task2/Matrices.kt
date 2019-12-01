@@ -4,6 +4,8 @@ package lesson9.task2
 
 import lesson9.task1.Matrix
 import lesson9.task1.createMatrix
+import kotlin.math.ceil
+import kotlin.math.floor
 
 // Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
 
@@ -117,7 +119,7 @@ fun generateRectangles(height: Int, width: Int): Matrix<Int> {
     }
     if (height < 3 || width < 3) return createMatrix(height, width, 1)
 
-    while (row <= height / 2 && column <= width / 2) {
+    while (row < ceil(height.toDouble() / 2) && column < ceil(width.toDouble() / 2)) {
         i++
         result = generateRectangle(i, row, column, result)
         row++
