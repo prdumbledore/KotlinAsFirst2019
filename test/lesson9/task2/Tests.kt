@@ -78,7 +78,7 @@ class Tests {
                 3, 3,
                 listOf(
                     listOf(1, 1, 1),
-                    listOf(1, 1, 1),
+                    listOf(1, 2, 1),
                     listOf(1, 1, 1)
                 )
             ), generateRectangles(3, 3)

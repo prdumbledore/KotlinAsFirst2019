@@ -110,7 +110,11 @@ fun generateRectangles(height: Int, width: Int): Matrix<Int> {
     var row = 1
     var column = 1
     var i = 1
-    if (height == 3 && width == 3) return createMatrix(height, width, 1)
+
+    if (height == 3 && width == 3) {
+        result[1, 1] = 2
+        return result
+    }
     if (height < 3 || width < 3) return createMatrix(height, width, 1)
 
     while (row <= height / 2 && column <= width / 2) {
