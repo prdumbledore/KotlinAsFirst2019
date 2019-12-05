@@ -190,7 +190,7 @@ fun bestHighJump(jumps: String): Int {
     return if (match && "+" in jumps) {
 
         val list = jumps.split(" ")
-        for (i in 0 until list.size step 2) {
+        for (i in list.indices step 2) {
             if ("+" in list[i + 1] && list[i].toInt() > max) max = list[i].toInt()
         }
 

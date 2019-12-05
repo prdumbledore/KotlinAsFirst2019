@@ -2,6 +2,8 @@
 
 package lesson9.task2
 
+import lesson8.task2.Square
+import lesson8.task3.Graph
 import lesson9.task1.Matrix
 import lesson9.task1.createMatrix
 import kotlin.math.ceil
@@ -165,7 +167,26 @@ fun generateRectangle(i: Int, height: Int, width: Int, result: Matrix<Int>): Mat
  * 10 13 16 18
  * 14 17 19 20
  */
-fun generateSnake(height: Int, width: Int): Matrix<Int> = TODO()
+fun generateSnake(height: Int, width: Int): Matrix<Int> {
+    val result = createMatrix(height, width, 0)
+    var numberToAdd = 1
+    if (height < 2 && width < 2) return createMatrix(height, width, 1)
+    for (row in 0 until height) {
+        for (column in 0 until width) {
+            if (result[row, column] == 0) {
+                result[row, column] = numberToAdd
+                numberToAdd++
+                var nextStep = Pair(row + 1, column - 1)
+                while (nextStep.first in 0 until height && nextStep.second in 0 until width) {
+                    result[nextStep.first, nextStep.second] = numberToAdd
+                    numberToAdd++
+                    nextStep = Pair(nextStep.first + 1, nextStep.second - 1)
+                }
+            }
+        }
+    }
+    return result
+}
 
 /**
  * Средняя
@@ -221,7 +242,43 @@ fun isLatinSquare(matrix: Matrix<Int>): Boolean = TODO()
  *
  * 42 ===> 0
  */
-fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> = TODO()
+fun toPair(s: String): Pair<Int, Int> {
+    val list = s.replace("(", "").replace(")", "").split(", ")
+    return Pair(list[0].toInt(), list[1].toInt())
+}
+
+fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> {
+    val result = createMatrix(matrix.height, matrix.width, 0)
+    if (matrix.height == 1 && matrix.width == 1) return result
+    val graph = Graph()
+    for (i in 0 until matrix.height) {
+        for (j in 0 until matrix.width) {
+            graph.addVertex(Pair(i, j).toString())
+        }
+    }
+    val moves =
+        listOf(Pair(1, -1), Pair(1, 0), Pair(1, 1), Pair(0, -1), Pair(0, 1), Pair(-1, -1), Pair(-1, 0), Pair(-1, 1))
+    for (row in 0 until matrix.height) {
+        for (column in 0 until matrix.width) {
+            for (pair in moves) {
+                val nextStep = Pair(row + pair.first, column + pair.second)
+                if (nextStep.first in 0 until matrix.height && nextStep.second in 0 until matrix.width) {
+                    graph.connect(Pair(row, column).toString(), nextStep.toString())
+                }
+            }
+        }
+    }
+    for (row in 0 until matrix.height) {
+        for (column in 0 until matrix.width) {
+            val cell = graph[Pair(row, column).toString()]
+            for (neighbor in cell.neighbors) {
+                val position = toPair(neighbor.name)
+                result[row, column] += matrix[position.first, position.second]
+            }
+        }
+    }
+    return result
+}
 
 /**
  * Средняя
@@ -238,7 +295,26 @@ fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> = TODO()
  * 0 0 1 0
  * 0 0 0 0
  */
-fun findHoles(matrix: Matrix<Int>): Holes = TODO()
+fun findHoles(matrix: Matrix<Int>): Holes {
+    val rows = mutableListOf<Int>()
+    val columns = mutableListOf<Int>()
+    for (row in 0 until matrix.height) {
+        var i = 0
+        for (col in 0 until matrix.width) {
+            if (matrix[row, col] == 0) i++
+        }
+        if (i == matrix.width) rows.add(row)
+    }
+    for (col in 0 until matrix.width) {
+        var i = 0
+        for (row in 0 until matrix.height) {
+            if (matrix[row, col] == 0) i++
+        }
+        if (i == matrix.height) columns.add(col)
+    }
+    return Holes(rows, columns)
+
+}
 
 /**
  * Класс для описания местонахождения "дырок" в матрице
